@@ -3,9 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Reagent Launcher</title>
 <meta name="description" content="Mods for your Steam, Epic Games and Xbox games as Off/On switches. Flip a switch, press Play.">
-<meta name="google-site-verification" content="jg8cu8_9AHbMSh8OLnvgL5qYNQKHVRPX-N2ZL08y6DE">
 <meta name="theme-color" content="#0b0c0f">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192">
@@ -16,70 +14,899 @@
 <meta property="og:title" content="Reagent Launcher">
 <meta property="og:description" content="Mods for your Steam, Epic Games and Xbox games as Off/On switches. Flip a switch, press Play.">
 <meta property="og:url" content="https://hamburger101.github.io/">
-<meta property="og:image" content="https://hamburger101.github.io/ReagentLauncher/img/og.jpg">
+<meta property="og:image" content="https://hamburger101.github.io/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<!-- The name Google shows above search results comes from this host's home page. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Reagent Launcher",
-  "alternateName": ["Reagent", "ReagentLauncher"],
+  "alternateName": [
+    "Reagent",
+    "ReagentLauncher"
+  ],
   "url": "https://hamburger101.github.io/"
 }
 </script>
+<meta name="google-site-verification" content="jg8cu8_9AHbMSh8OLnvgL5qYNQKHVRPX-N2ZL08y6DE">
+<title>Reagent Launcher – Mods for your Steam, Epic Games &amp; Xbox games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* The root of hamburger101.github.io: a doorway to the Reagent Launcher site,
-   in the launcher's own palette (dark first). */
+/* Layout: the launcher, unfolded - a blurred top bar, the real app in the hero,
+   then its mod library as the same sidebar-and-list you get in the app.
+   Colours are the launcher's own palette (reagent_launcher/ui/theme.py), dark first. */
 :root {
-  --bg: #0b0c0f; --card: #121317; --chip: #1a1b20; --line: #2d3038;
-  --text: #f3f4f6; --dim: #a2a6b0; --cta: #f5f5f7; --cta-hover: #ffffff; --cta-ink: #0b0c0f;
-  --glow: rgba(139, 123, 255, 0.28); --accent: #8b7bff;
-  --font: "Inter", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --bg: #0b0c0f;
+  --surface: #0e0f12;
+  --card: #121317;
+  --raised: #16171c;
+  --chip: #1a1b20;
+  --line: #202228;
+  --line-strong: #2d3038;
+  --text: #f3f4f6;
+  --dim: #a2a6b0;
+  --faint: #646873;
+  --accent: #8b7bff;
+  --accent-ink: #ffffff;
+  --accent-soft: #1f1c36;
+  --accent-text: #a99dff;
+  --cta: #f5f5f7;
+  --cta-hover: #ffffff;
+  --cta-ink: #0b0c0f;
+  --good: #3ccf8e;
+  --good-soft: rgba(60, 207, 142, 0.12);
+  --warn: #f0b54a;
+  --warn-soft: rgba(240, 181, 74, 0.12);
+  --knob: #2d3038;
+  --knob-ink: #f3f4f6;
+  --glow: rgba(139, 123, 255, 0.30);
+  --bar: rgba(11, 12, 15, 0.72);
+  --shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.85);
+  --shadow-card: 0 18px 40px -16px rgba(0, 0, 0, 0.7);
+  --shot-dark: block;
+  --shot-light: none;
+
+  --font-ui: "Inter", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-data: "JetBrains Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.375rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+  --step-4: clamp(2.75rem, 1.6rem + 5.6vw, 5.25rem);
+  --radius: 14px;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f4f5f7; --card: #ffffff; --chip: #eceef2; --line: #cfd3db;
-    --text: #121318; --dim: #5a5f6a; --cta: #121318; --cta-hover: #2a2c33; --cta-ink: #ffffff;
-    --glow: rgba(107, 92, 240, 0.2); --accent: #6b5cf0;
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f5f7; --surface: #fbfbfc; --card: #ffffff; --raised: #f7f8fa; --chip: #eceef2;
+    --line: #e3e5ea; --line-strong: #cfd3db; --text: #121318; --dim: #5a5f6a; --faint: #8b909b;
+    --accent: #6b5cf0; --accent-ink: #ffffff; --accent-soft: #ece9ff; --accent-text: #5242d8;
+    --cta: #121318; --cta-hover: #2a2c33; --cta-ink: #ffffff;
+    --good: #1a8a56; --good-soft: rgba(31, 157, 99, 0.12); --warn: #96630a; --warn-soft: rgba(168, 111, 0, 0.12);
+    --knob: #ffffff; --knob-ink: #121318; --glow: rgba(107, 92, 240, 0.22); --bar: rgba(244, 245, 247, 0.8);
+    --shadow: 0 40px 80px -34px rgba(32, 30, 70, 0.45); --shadow-card: 0 18px 40px -18px rgba(32, 30, 70, 0.35);
+    --shot-dark: none; --shot-light: block;
     color-scheme: light;
   }
 }
+:root[data-theme="light"] {
+  --bg: #f4f5f7; --surface: #fbfbfc; --card: #ffffff; --raised: #f7f8fa; --chip: #eceef2;
+  --line: #e3e5ea; --line-strong: #cfd3db; --text: #121318; --dim: #5a5f6a; --faint: #8b909b;
+  --accent: #6b5cf0; --accent-ink: #ffffff; --accent-soft: #ece9ff; --accent-text: #5242d8;
+  --cta: #121318; --cta-hover: #2a2c33; --cta-ink: #ffffff;
+  --good: #1a8a56; --good-soft: rgba(31, 157, 99, 0.12); --warn: #96630a; --warn-soft: rgba(168, 111, 0, 0.12);
+  --knob: #ffffff; --knob-ink: #121318; --glow: rgba(107, 92, 240, 0.22); --bar: rgba(244, 245, 247, 0.8);
+  --shadow: 0 40px 80px -34px rgba(32, 30, 70, 0.45); --shadow-card: 0 18px 40px -18px rgba(32, 30, 70, 0.35);
+  --shot-dark: none; --shot-light: block;
+  color-scheme: light;
+}
+
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html { -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body {
-  margin: 0; background: var(--bg); color: var(--text); font: 400 1rem/1.6 var(--font);
-  -webkit-font-smoothing: antialiased; display: grid; place-items: center; padding-inline: 20px;
-  background-image: radial-gradient(40rem 26rem at 50% 30%, var(--glow), transparent 70%);
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 var(--step-0)/1.6 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
-main { display: grid; justify-items: center; gap: 18px; text-align: center; max-width: 34rem; padding-block: 48px; }
-img { width: 88px; height: 88px; border-radius: 22px; box-shadow: 0 24px 60px -20px var(--glow); }
-h1 { margin: 6px 0 0; font-size: clamp(2.2rem, 1.6rem + 3vw, 3.2rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-p { margin: 0; color: var(--dim); font-size: 1.125rem; }
-.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
-a.btn {
-  display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 12px;
-  font-weight: 600; text-decoration: none; border: 1px solid transparent;
+a { color: inherit; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+section[id], footer { scroll-margin-top: 84px; }
+
+.wrap { width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: 20px; }
+.label {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
 }
-.primary { background: var(--cta); color: var(--cta-ink); }
-.primary:hover { background: var(--cta-hover); }
-.quiet { background: var(--chip); color: var(--text); border-color: var(--line); }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-data); font-weight: 500; font-variant-numeric: tabular-nums; }
+.icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* buttons: white Play-style primary, quiet grey secondary - as in the app */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 0 22px; border-radius: 12px; border: 1px solid transparent;
+  font-weight: 700; font-size: var(--step-0); text-decoration: none; cursor: pointer;
+  transition: background-color .15s ease, transform .15s ease, border-color .15s ease;
+}
+.btn-primary { background: var(--cta); color: var(--cta-ink); }
+.btn-primary:hover { background: var(--cta-hover); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-quiet { background: var(--chip); color: var(--text); border-color: var(--line); }
+.btn-quiet:hover { border-color: var(--line-strong); }
+.btn-small { min-height: 38px; padding: 0 16px; font-size: 0.9375rem; border-radius: 10px; }
+
+/* top bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background: var(--bar); border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+}
+.bar-inner { display: flex; align-items: center; gap: 28px; height: 64px; }
+.brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 700; font-size: 1.0625rem; letter-spacing: -0.01em; }
+.brand img { width: 32px; height: 32px; border-radius: 9px; }
+.nav { display: flex; gap: 24px; margin-left: auto; }
+.nav a { text-decoration: none; color: var(--dim); font-weight: 500; font-size: 0.9375rem; }
+.nav a:hover { color: var(--text); }
+@media (max-width: 760px) { .nav { display: none; } .bar .btn { margin-left: auto; } }
+
+/* hero */
+.hero { padding-block: 72px 0; }
+.hero-copy { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px 56px; align-items: end; }
+.news {
+  display: inline-flex; align-items: center; gap: 10px; margin-bottom: 26px;
+  padding: 6px 14px 6px 6px; border-radius: 999px; background: var(--chip); border: 1px solid var(--line);
+  text-decoration: none; font-size: 0.875rem; color: var(--dim);
+}
+.news b { background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 2px 10px; font-size: 0.75rem; letter-spacing: 0.04em; }
+.news:hover { border-color: var(--line-strong); color: var(--text); }
+.hero h1 { font-size: var(--step-4); font-weight: 800; line-height: 0.98; letter-spacing: -0.045em; }
+.hero h1 span { color: var(--faint); }
+.lead { margin-top: 24px; max-width: 34em; font-size: var(--step-1); color: var(--dim); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.facts { display: flex; gap: 36px; margin: 0; }
+.facts dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.facts dd { margin: 4px 0 0; font-size: var(--step-2); font-weight: 700; letter-spacing: -0.01em; }
+@media (max-width: 900px) { .hero-copy { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .hero { padding-block: 44px 0; } .facts { gap: 24px; } .actions .btn { flex: 1 1 100%; } }
+
+.stage { position: relative; margin-top: 56px; }
+.stage::before {
+  content: ""; position: absolute; inset: -6% 8% 30%; z-index: 0;
+  background: radial-gradient(closest-side, var(--glow), transparent); filter: blur(30px); pointer-events: none;
+}
+.shot {
+  position: relative; z-index: 1; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--line-strong); background: var(--card); box-shadow: var(--shadow);
+}
+.shot img { width: 100%; height: auto; aspect-ratio: 1860 / 1170; }
+.shot .shot-dark { display: var(--shot-dark); }
+.shot .shot-light { display: var(--shot-light); }
+
+.try {
+  position: absolute; z-index: 2; left: 28px; bottom: -36px; width: min(380px, calc(100% - 56px));
+  background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow-card); padding: 16px 18px;
+}
+.try-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.try-row { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+.try-row > div { min-width: 0; }
+.try h3 { font-size: var(--step-0); font-weight: 700; }
+.try p { font-size: 0.875rem; color: var(--dim); line-height: 1.45; margin-top: 2px; }
+.try-hint { font-size: 0.8125rem; color: var(--accent-text); font-weight: 600; }
+
+.switch {
+  display: inline-flex; flex: none; padding: 3px; gap: 2px; border-radius: 10px; cursor: pointer;
+  background: var(--chip); border: 1px solid var(--line);
+}
+.switch span {
+  min-width: 46px; padding: 5px 10px; border-radius: 7px; text-align: center;
+  font-size: 0.875rem; font-weight: 600; color: var(--faint); transition: background-color .18s ease, color .18s ease;
+}
+.switch[aria-pressed="false"] span:first-child { background: var(--knob); color: var(--knob-ink); }
+.switch[aria-pressed="true"] span:last-child { background: var(--accent); color: var(--accent-ink); }
+
+.toast {
+  position: absolute; z-index: 3; top: 22px; right: 22px; display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-card); font-weight: 600; font-size: 0.9375rem;
+  opacity: 0; transform: translateY(8px); transition: opacity .25s ease, transform .25s ease; pointer-events: none;
+}
+.toast .icon { color: var(--good); }
+.toast.show { opacity: 1; transform: none; }
+@media (max-width: 720px) {
+  .try { position: relative; left: auto; bottom: auto; width: auto; margin-top: 14px; }
+  .toast { top: 12px; right: 12px; font-size: 0.8125rem; }
+}
+
+/* sections */
+.section { padding-block: 112px 0; }
+.section-head { display: grid; gap: 14px; max-width: 46em; margin-bottom: 40px; }
+.section-head h2 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.section-head p { color: var(--dim); font-size: var(--step-1); }
+@media (max-width: 480px) { .section { padding-block: 80px 0; } }
+
+/* how it works - a real sequence, so numbered */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 0; padding: 0; }
+.steps li { padding: 24px; border-radius: var(--radius); background: var(--card); border: 1px solid var(--line); }
+.steps .n {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
+  background: var(--accent-soft); color: var(--accent-text); font-family: var(--font-data); font-weight: 500;
+}
+.steps h3 { margin-top: 18px; font-size: var(--step-1); font-weight: 700; }
+.steps p { margin-top: 6px; color: var(--dim); }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+
+/* mod library */
+.game-list {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+.game-list a {
+  display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px 16px; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-weight: 600;
+}
+.game-list a:hover { border-color: var(--line-strong); }
+.game-list .name { flex: 1; min-width: 0; }
+.game-list .mono { font-size: 0.75rem; color: var(--faint); white-space: nowrap; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-bottom: 18px; color: var(--dim); font-size: 0.875rem; }
+.legend div { display: inline-flex; align-items: center; gap: 8px; }
+.badge {
+  display: inline-flex; align-items: center; white-space: nowrap; padding: 3px 9px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600; background: var(--chip); color: var(--dim);
+}
+.badge.any { background: var(--good-soft); color: var(--good); }
+.badge.partial { background: var(--accent-soft); color: var(--accent-text); }
+.badge.host { background: var(--warn-soft); color: var(--warn); }
+.badge.play { background: transparent; border: 1px solid var(--line-strong); padding: 2px 8px; }
+
+.lib {
+  display: grid; grid-template-columns: 290px minmax(0, 1fr); min-height: 600px;
+  border: 1px solid var(--line); border-radius: 18px; background: var(--card); overflow: hidden;
+}
+.lib-side { background: var(--surface); border-right: 1px solid var(--line); padding: 18px 12px; min-width: 0; }
+.search { position: relative; margin: 0 4px 18px; }
+.search .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--faint); width: 18px; height: 18px; }
+.search input {
+  width: 100%; height: 44px; padding: 0 40px 0 42px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--chip); color: var(--text); font: inherit; font-size: 0.9375rem;
+}
+.search input::placeholder { color: var(--faint); }
+.search input:focus { outline: none; border-color: var(--accent); }
+.search button {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px;
+  border: 0; border-radius: 8px; background: transparent; color: var(--faint); cursor: pointer; font-size: 1.1rem;
+}
+.search button:hover { color: var(--text); background: var(--line); }
+.side-label { display: flex; justify-content: space-between; padding: 0 12px 8px; }
+.games { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.game {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; padding: 9px 12px; border: 0; border-radius: 10px;
+  background: transparent; text-align: left; cursor: pointer; color: var(--dim); font-size: 0.9375rem; font-weight: 500;
+}
+.game:hover { background: var(--chip); color: var(--text); }
+.game[aria-pressed="true"] { background: var(--chip); color: var(--text); font-weight: 600; }
+.game .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.game .count { font-family: var(--font-data); font-size: 0.75rem; color: var(--faint); }
+.game[aria-pressed="true"] .count { color: var(--accent-text); }
+
+.lib-main { padding: 28px 32px 32px; min-width: 0; }
+.lib-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.lib-head h3 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-top: 6px; }
+.lib-head .sub { margin-top: 6px; color: var(--dim); font-size: 0.9375rem; }
+.store { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); font-size: 0.875rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.store:hover { color: var(--text); }
+.store .icon { width: 16px; height: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 6px; }
+.chip {
+  border: 1px solid transparent; background: transparent; color: var(--dim); cursor: pointer;
+  padding: 7px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.chip:hover { color: var(--text); }
+.chip[aria-pressed="true"] { background: var(--chip); border-color: var(--line-strong); color: var(--text); }
+.group { margin-top: 26px; }
+.group-label { display: flex; gap: 10px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.group-label .mono { font-size: 0.75rem; color: var(--faint); }
+.mod { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.mod h4 { font-size: var(--step-0); font-weight: 700; }
+.mod .from { display: block; font-size: 0.75rem; font-weight: 600; color: var(--faint); margin-bottom: 2px; }
+.mod p { color: var(--dim); font-size: 0.9375rem; margin-top: 2px; }
+.mod .more {
+  margin-top: 6px; padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--accent-text); font-size: 0.8125rem; font-weight: 600;
+}
+.mod .long { margin-top: 8px; max-width: 62em; font-size: 0.9375rem; color: var(--dim); line-height: 1.65; }
+.mod-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.mod-tags .mono { font-size: 0.75rem; color: var(--faint); }
+.empty { padding: 48px 0; color: var(--dim); }
+@media (max-width: 860px) {
+  .lib { grid-template-columns: 1fr; min-height: 0; }
+  .lib-side { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px 12px 12px; }
+  .side-label { display: none; }
+  .games { display: flex; gap: 6px; overflow-x: auto; padding: 0 4px 6px; scrollbar-width: thin; }
+  .game { width: auto; flex: none; border: 1px solid var(--line); }
+  .lib-main { padding: 22px 18px 26px; }
+}
+@media (max-width: 560px) {
+  .mod { grid-template-columns: 1fr; }
+  .mod-tags { flex-direction: row; flex-wrap: wrap; align-items: center; }
+}
+
+/* what it handles */
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 36px; }
+.feature .glyph {
+  display: grid; place-items: center; width: 42px; height: 42px; border-radius: 11px;
+  background: var(--chip); border: 1px solid var(--line); color: var(--text);
+}
+.feature h3 { margin-top: 16px; font-size: var(--step-1); font-weight: 700; }
+.feature p { margin-top: 6px; color: var(--dim); }
+@media (max-width: 900px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .features { grid-template-columns: 1fr; gap: 28px; } }
+
+/* download */
+.get {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 0;
+  border: 1px solid var(--line-strong); border-radius: 20px; background: var(--card); overflow: hidden;
+}
+.get-main { padding: 40px; display: grid; gap: 22px; align-content: start; }
+.get-main h2 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.get-main h2 .mono { font-size: 0.7em; color: var(--accent-text); letter-spacing: 0; }
+.get .facts { flex-wrap: wrap; gap: 18px 32px; }
+.get .facts dd { font-size: var(--step-0); }
+.note { font-size: 0.875rem; color: var(--faint); }
+.get-new { padding: 40px; background: var(--raised); border-left: 1px solid var(--line); }
+.release ul { padding-left: 20px; display: grid; gap: 8px; color: var(--dim); }
+.release li::marker { color: var(--accent); }
+.install { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 20px; counter-reset: step; }
+.install li { display: grid; grid-template-columns: 30px minmax(0, 1fr); column-gap: 12px; counter-increment: step; }
+.install li::before {
+  content: counter(step); grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
+  background: var(--accent-soft); color: var(--accent-text); font-family: var(--font-data); font-size: 0.875rem;
+}
+.install h3 { font-size: var(--step-0); font-weight: 700; line-height: 30px; }
+.install p { color: var(--dim); font-size: 0.9375rem; }
+.install code { font-family: var(--font-data); font-size: 0.85em; background: var(--chip); padding: 1px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+@media (max-width: 900px) {
+  .get { grid-template-columns: 1fr; }
+  .get-new { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 480px) { .get-main, .get-new { padding: 26px 22px; } }
+
+/* faq */
+.faq { display: grid; gap: 10px; max-width: 860px; }
+.faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 18px 22px; font-weight: 600; font-size: var(--step-0);
+  display: flex; justify-content: space-between; gap: 16px; align-items: center;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-data); color: var(--faint); font-size: 1.2rem; line-height: 1; }
+.faq details[open] summary::after { content: "\2212"; }
+.faq .answer { padding: 0 22px 20px; color: var(--dim); max-width: 46em; display: grid; gap: 10px; }
+.faq code { font-family: var(--font-data); font-size: 0.85em; background: var(--chip); padding: 1px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+.faq a { color: var(--accent-text); }
+
+/* changelog */
+.releases { display: grid; max-width: 860px; }
+.release { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 8px 32px; padding: 24px 0; border-top: 1px solid var(--line); }
+.release header { display: grid; gap: 4px; align-content: start; }
+.release .mono { font-size: 1.0625rem; color: var(--text); }
+.release time { font-size: 0.875rem; color: var(--faint); }
+.release .badge { justify-self: start; }
+.release ul { margin: 0; }
+@media (max-width: 600px) { .release { grid-template-columns: 1fr; } .release header { display: flex; gap: 12px; align-items: baseline; } }
+
+/* footer */
+.foot { margin-top: 120px; border-top: 1px solid var(--line); background: var(--surface); }
+.foot-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; padding-block: 40px 48px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+.foot nav a { color: var(--dim); text-decoration: none; font-size: 0.9375rem; }
+.foot nav a:hover { color: var(--text); }
+.foot .small { grid-column: 1 / -1; font-size: 0.8125rem; color: var(--faint); max-width: 60em; }
+@media (max-width: 700px) { .foot-inner { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
 </style>
 </head>
 <body>
-<main>
-  <img src="/icon-192.png" alt="" width="88" height="88">
-  <h1>Reagent Launcher</h1>
-  <p>Mods for your Steam, Epic Games and Xbox games as Off/On switches. Flip a switch, press Play.</p>
-  <div class="actions">
-    <a class="btn primary" href="/ReagentLauncher/">Open the website</a>
-    <a class="btn quiet" href="https://github.com/hamburger101/ReagentLauncher/releases/latest/download/Reagent-Launcher.zip">Download for Windows</a>
+<header class="bar">
+  <div class="wrap bar-inner">
+    <a class="brand" href="#top"><img src="img/icon.png" alt="" width="32" height="32">Reagent Launcher</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#supported">Games</a>
+      <a href="#mods">Mods</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+      <a href="#changelog">Changelog</a>
+    </nav>
+    <a class="btn btn-primary btn-small" href="#download">Download</a>
   </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <a class="news" href="#changelog"><b>1.0.24</b>Side Effects</a>
+      <div class="hero-copy">
+        <div>
+          <h1>Flip a switch.<br><span>Press Play.</span></h1>
+          <p class="lead">Reagent Launcher finds your Steam, Epic Games and Xbox games and gives each one its mods as Off/On switches. No copying files or editing configs. The launcher sets up the mod loader, places the files and tidies up after.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#download">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+              Download for Windows
+            </a>
+            <a class="btn btn-quiet" href="#mods">Browse 100+ mods</a>
+          </div>
+        </div>
+        <dl class="facts" aria-label="At a glance">
+          <div><dt>Mods</dt><dd class="mono">100+</dd></div>
+          <div><dt>Games</dt><dd class="mono">21</dd></div>
+          <div><dt>Size</dt><dd class="mono">62.7 MB</dd></div>
+        </dl>
+      </div>
+
+      <div class="stage">
+        <div class="shot">
+          <img class="shot-dark" src="img/launcher-dark.webp" width="1860" height="1170" alt="Reagent Launcher showing MECCHA CHAMELEON's mods as Off/On switches, with the games that have mods in the sidebar.">
+          <img class="shot-light" src="img/launcher-light.webp" width="1860" height="1170" alt="Reagent Launcher in its light theme, showing MECCHA CHAMELEON's mods.">
+        </div>
+        <div class="toast" id="toast" role="status" aria-live="polite">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5 8.5-9.5"/></svg>
+          <span id="toast-text">Invisible to Hunters is on</span>
+        </div>
+        <div class="try">
+          <div class="try-top"><span class="label">MECCHA CHAMELEON</span><span class="try-hint">Try the switch</span></div>
+          <div class="try-row">
+            <div>
+              <h3>Invisible to Hunters</h3>
+              <p>While you hide, nobody else can see you. Works on any server.</p>
+            </div>
+            <button class="switch" id="demo-switch" type="button" aria-pressed="false" aria-label="Invisible to Hunters">
+              <span>Off</span><span>On</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">How it works</span>
+        <h2 id="how-title">From download to a modded game in three steps</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="n">1</span>
+          <h3>Download and unzip</h3>
+          <p>Unzip it into a folder you own, like Documents, and run <b>Reagent Launcher.exe</b>. There's no installer.</p>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <h3>Pick a game</h3>
+          <p>Your Steam, Epic Games and Xbox app games show up by themselves, and a filter shows only the ones with mods.</p>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <h3>Flip a switch, press Play</h3>
+          <p>The launcher sets up the mod loader and the mod for you. Many switches work even while the game is running.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="supported" aria-labelledby="supported-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Supported games</span>
+        <h2 id="supported-title">21 games, A to Z</h2>
+        <p>Every game Reagent Launcher has mods for. Pick one to see its mods.</p>
+      </div>
+      <ul class="game-list"><li><a href="#mods" data-game="2835570"><span class="name">Buckshot Roulette</span><span class="mono">2 mods</span></a></li><li><a href="#mods" data-game="3844970"><span class="name">Burglin&#x27; Gnomes</span><span class="mono">9 mods</span></a></li><li><a href="#mods" data-game="397950"><span class="name">Clustertruck</span><span class="mono">4 mods</span></a></li><li><a href="#mods" data-game="2881650"><span class="name">Content Warning</span><span class="mono">13 mods</span></a></li><li><a href="#mods" data-game="268910"><span class="name">Cuphead</span><span class="mono">11 mods</span></a></li><li><a href="#mods" data-game="319510"><span class="name">Five Nights at Freddy&#x27;s</span><span class="mono">6 mods</span></a></li><li><a href="#mods" data-game="332800"><span class="name">Five Nights at Freddy&#x27;s 2</span><span class="mono">8 mods</span></a></li><li><a href="#mods" data-game="354140"><span class="name">Five Nights at Freddy&#x27;s 3</span><span class="mono">8 mods</span></a></li><li><a href="#mods" data-game="388090"><span class="name">Five Nights at Freddy&#x27;s 4</span><span class="mono">5 mods</span></a></li><li><a href="#mods" data-game="506610"><span class="name">Five Nights at Freddy&#x27;s: Sister Location</span><span class="mono">7 mods</span></a></li><li><a href="#mods" data-game="738060"><span class="name">Freddy Fazbear&#x27;s Pizzeria Simulator</span><span class="mono">21 mods</span></a></li><li><a href="#mods" data-game="285900"><span class="name">Gang Beasts</span><span class="mono">3 mods</span></a></li><li><a href="#mods" data-game="2726490"><span class="name">Hamster Hunter</span><span class="mono">7 mods</span></a></li><li><a href="#mods" data-game="4704690"><span class="name">MECCHA CHAMELEON</span><span class="mono">9 mods</span></a></li><li><a href="#mods" data-game="2551020"><span class="name">One-armed robber</span><span class="mono">4 mods</span></a></li><li><a href="#mods" data-game="3527290"><span class="name">PEAK</span><span class="mono">10 mods</span></a></li><li><a href="#mods" data-game="3241660"><span class="name">R.E.P.O.</span><span class="mono">8 mods</span></a></li><li><a href="#mods" data-game="3799100"><span class="name">Side Effects</span><span class="mono">8 mods</span></a></li><li><a href="#mods" data-game="2709570"><span class="name">Supermarket Together</span><span class="mono">7 mods</span></a></li><li><a href="#mods" data-game="871720"><span class="name">Ultimate Custom Night</span><span class="mono">9 mods</span></a></li><li><a href="#mods" data-game="391540"><span class="name">Undertale</span><span class="mono">6 mods</span></a></li></ul>
+    </div>
+  </section>
+
+  <section class="section" id="mods" aria-labelledby="mods-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Mod library</span>
+        <h2 id="mods-title">100+ mods for 21 games</h2>
+        <p>Every mod in the launcher today. Multiplayer mods say where they work, so you know before you join a friend's lobby.</p>
+      </div>
+      <div class="legend" aria-label="What the labels mean">
+        <div><span class="badge any">Any lobby</span>yours or a friend's</div>
+        <div><span class="badge partial">Best as host</span>all of it when you host, part of it as a guest</div>
+        <div><span class="badge host">Host or solo</span>your own game only</div>
+        <div><span class="badge play">Use while playing</span>set an amount or press Apply in-game</div>
+      </div>
+      <div class="lib">
+        <aside class="lib-side">
+          <div class="search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+            <input id="mod-search" type="search" placeholder="Search mods" aria-label="Search mods" autocomplete="off">
+            <button type="button" id="search-clear" aria-label="Clear search" hidden>&times;</button>
+          </div>
+          <div class="side-label"><span class="label">Games with mods</span><span class="label mono">21</span></div>
+          <div class="games" id="games" role="group" aria-label="Games"></div>
+        </aside>
+        <div class="lib-main" id="lib-main" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">What it handles</span>
+        <h2 id="features-title">The fiddly parts of modding, done for you</h2>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="5"/><circle cx="16" cy="12" r="2.6"/></svg></span>
+          <h3>Switches, not installs</h3>
+          <p>Every mod is an Off/On switch. Placing files, backing up what they replace and cleaning up all happen behind the scenes.</p>
+        </div>
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg></span>
+          <h3>Your game folders stay clean</h3>
+          <p>Mods live in the launcher's own folder. Switch one off and the game goes back to how it was.</p>
+        </div>
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="8" width="15" height="11.5" rx="2"/><path d="M4.5 12h15M9 8l1.5-3.5M15 8l-1.5-3.5"/></svg></span>
+          <h3>Mod loaders set up for you</h3>
+          <p>MelonLoader, BepInEx, UE4SS and Reagent Loader are installed the first time a mod needs one, along with any Microsoft runtime they need.</p>
+        </div>
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-4 10.5-4 11 0"/><circle cx="16.5" cy="9" r="2.5"/><path d="M15.5 14.2c2.6-.3 4.8.9 5 4.8"/></svg></span>
+          <h3>Made for playing with friends</h3>
+          <p>Multiplayer mods say where they work. Most MECCHA CHAMELEON mods work on a friend's server even when they don't have Reagent.</p>
+        </div>
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></span>
+          <h3>"Is it working?" in one click</h3>
+          <p>See whether the mod loader started, which mods loaded last time, and which one crashed the game if one did.</p>
+        </div>
+        <div class="feature">
+          <span class="glyph"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4"/></svg></span>
+          <h3>Updates itself</h3>
+          <p>New mods arrive with launcher updates. It checks when it starts, and an update that fails is rolled back.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="download" aria-labelledby="download-title">
+    <div class="wrap">
+      <div class="get">
+        <div class="get-main">
+          <span class="label">Download</span>
+          <h2 id="download-title">Reagent Launcher <span class="mono">1.0.24</span></h2>
+          <dl class="facts">
+            <div><dt>Released</dt><dd>13 Oct 2026</dd></div>
+            <div><dt>Size</dt><dd class="mono">62.7 MB</dd></div>
+            <div><dt>Needs</dt><dd>Windows 10 or 11</dd></div>
+            <div><dt>Price</dt><dd>Free</dd></div>
+          </dl>
+          <div class="actions" style="margin-top:4px">
+            <a class="btn btn-primary" href="https://github.com/hamburger101/ReagentLauncher/releases/latest/download/Reagent-Launcher.zip" rel="noopener">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+              Download Reagent-Launcher.zip
+            </a>
+          </div>
+          <p class="note">Downloads from GitHub. Once installed, the launcher updates itself.</p>
+        </div>
+        <div class="get-new">
+          <span class="label">Installing</span>
+          <ol class="install">
+            <li>
+              <h3>Unzip it</h3>
+              <p>Put the <code>Reagent Launcher</code> folder somewhere you own, like Documents or the Desktop. Not in Program Files, or it can't update itself.</p>
+            </li>
+            <li>
+              <h3>Run it</h3>
+              <p>Open <code>Reagent Launcher.exe</code>. If Windows says "Windows protected your PC", click <b>More info</b>, then <b>Run anyway</b>. The launcher isn't code-signed yet, so Windows doesn't recognise it.</p>
+            </li>
+            <li>
+              <h3>Pick a game</h3>
+              <p>Choose a game with mods in the sidebar, flip the switches you want and press <b>Play</b>.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Questions</span>
+        <h2 id="faq-title">FAQ</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Is it free?</summary>
+          <div class="answer"><p>Yes. There's no account to make and there are no ads.</p></div>
+        </details>
+        <details>
+          <summary>Do my friends need Reagent Launcher too?</summary>
+          <div class="answer">
+            <p>Check the label on the mod. <b>Any lobby</b> mods work whether you host or join, even when the host doesn't have Reagent. <b>Best as host</b> mods do everything on your own server and part of it on a friend's; they do the rest there when the host has Reagent too. <b>Host or solo</b> mods only work in your own game.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Can I get banned for using mods?</summary>
+          <div class="answer">
+            <p>Games protected by Easy Anti-Cheat or BattlEye can ban accounts caught with modified files. The launcher looks for both and warns you on the game's page, and it never touches them.</p>
+            <p>Use mods on your own, or with friends who know you're using them. Don't use them in public matches.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Does it work with PC Game Pass?</summary>
+          <div class="answer"><p>Your Xbox app games, including PC Game Pass, show up in the launcher and start through the Xbox app. Mods that need a script loader such as UE4SS aren't added to Xbox copies, because those loaders crash them at start.</p></div>
+        </details>
+        <details>
+          <summary>How do I remove a mod, or the launcher?</summary>
+          <div class="answer">
+            <p>Switch the mod off. Its files leave the game folder and anything it replaced is put back.</p>
+            <p>To remove the launcher, switch your mods off, close it and delete its folder. Its settings are in <code>%LOCALAPPDATA%\Reagent_Launcher</code>.</p>
+          </div>
+        </details>
+        <details>
+          <summary>How does updating work?</summary>
+          <div class="answer"><p>Each time it starts, the launcher checks for a new version and offers to install it. It swaps itself out safely and rolls back if anything goes wrong. Your settings and mods carry over.</p></div>
+        </details>
+        <details>
+          <summary>Can I use Chromium with Thunderstore?</summary>
+          <div class="answer"><p>Yes. Chromium, the MECCHA CHAMELEON frame-rate mod, is also on <a href="https://thunderstore.io/c/meccha-chameleon/p/Reagent/Chromium/" rel="noopener">Thunderstore</a>, so it works with r2modman and other mod managers.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="changelog" aria-labelledby="changelog-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Changelog</span>
+        <h2 id="changelog-title">What's changed</h2>
+      </div>
+      <div class="releases"><article class="release"><header><span class="mono">1.0.24</span><time datetime="2026-10-13">13 Oct 2026</time><span class="badge partial">Latest</span></header><ul><li>Side Effects: 8 new mods - Unlimited Health, Unlimited Shield, Pill X-Ray (safe pills glow green, deadly ones red), Always Safe, Item Spawner, Unlimited Item Uses, Unlimited Rerolls and No Pill Timer.</li><li>Cuphead: 5 new mods - Boss Health Bar (with the boss&#x27;s death-screen mugshot), Damage Multiplier (0.5x to 50x), Hitbox Viewer, Auto-Collect Coins and End Fight.</li></ul></article></div>
+    </div>
+  </section>
 </main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <a class="brand" href="#top"><img src="img/icon.png" alt="" width="32" height="32">Reagent Launcher</a>
+    <nav aria-label="Footer">
+      <a href="#download">Download</a>
+      <a href="#supported">Games</a>
+      <a href="#mods">Mods</a>
+      <a href="#faq">FAQ</a>
+      <a href="#changelog">Changelog</a>
+      <a href="https://thunderstore.io/c/meccha-chameleon/p/Reagent/Chromium/" rel="noopener">Thunderstore</a>
+    </nav>
+    <p class="small">Reagent Launcher is a fan-made tool. It isn't made by, affiliated with or endorsed by the developers of the games it supports, and the game names belong to their owners. &copy; 2026 Reagent.</p>
+  </div>
+</footer>
+
+<script id="mods-data" type="application/json">{"games":[{"id":2835570,"name":"Buckshot Roulette","count":2,"loaders":["Reagent Loader GD"]},{"id":3844970,"name":"Burglin' Gnomes","count":9,"loaders":["MelonLoader"]},{"id":397950,"name":"Clustertruck","count":4,"loaders":["BepInEx"]},{"id":2881650,"name":"Content Warning","count":13,"loaders":["MelonLoader"]},{"id":268910,"name":"Cuphead","count":11,"loaders":["BepInEx"]},{"id":319510,"name":"Five Nights at Freddy's","count":6,"loaders":["Reagent Loader"]},{"id":332800,"name":"Five Nights at Freddy's 2","count":8,"loaders":["Reagent Loader"]},{"id":354140,"name":"Five Nights at Freddy's 3","count":8,"loaders":["Reagent Loader"]},{"id":388090,"name":"Five Nights at Freddy's 4","count":5,"loaders":["Reagent Loader"]},{"id":506610,"name":"Five Nights at Freddy's: Sister Location","count":7,"loaders":["Reagent Loader"]},{"id":738060,"name":"Freddy Fazbear's Pizzeria Simulator","count":21,"loaders":["Reagent Loader"]},{"id":285900,"name":"Gang Beasts","count":3,"loaders":["MelonLoader"]},{"id":2726490,"name":"Hamster Hunter","count":7,"loaders":["MelonLoader"]},{"id":4704690,"name":"MECCHA CHAMELEON","count":9,"loaders":["UE4SS"]},{"id":2551020,"name":"One-armed robber","count":4,"loaders":["UE4SS"]},{"id":3527290,"name":"PEAK","count":10,"loaders":["MelonLoader"]},{"id":3241660,"name":"R.E.P.O.","count":8,"loaders":["MelonLoader"]},{"id":3799100,"name":"Side Effects","count":8,"loaders":["MelonLoader"]},{"id":2709570,"name":"Supermarket Together","count":7,"loaders":["MelonLoader"]},{"id":871720,"name":"Ultimate Custom Night","count":9,"loaders":["Reagent Loader"]},{"id":391540,"name":"Undertale","count":6,"loaders":["Reagent Loader"]}],"mods":[{"g":285900,"n":"One-Punch Man","v":"1.4.2","s":"Punches hit and launch players far harder.","d":"Boosts punch force and damage for human players only - Waves bosses and other AI stay vanilla. Uses the per-actor punch modifiers the game already has, and re-applies as beasts spawn. Works in every game mode. Tune it in UserData/MelonPreferences.cfg.","c":"Combat","l":"local","a":0},{"g":285900,"n":"Mega Head Butt","v":"1.4.2","s":"Headbutts carry three times the force.","d":"Every headbutt adds a 15 m/s push along the direction your head is moving (BaseImpulse 5 x HeadbuttMultiplier 3), so a clean hit sends people flying. Human players only - AI is excluded. Works in every game mode. Set LocalPlayerOnly to false for couch play.","c":"Combat","l":"local","a":0},{"g":285900,"n":"15 Wins","v":"1.0.1","s":"Play Melee and Gang Melee to 15 wins instead of 8.","d":"Raises the lobby's win picker from 8 to 15 for Melee and Gang Melee, in local games and Custom online lobbies. The game itself plays the match to that number and the end-of-round stars count to it. Public matchmaking is always first to 3 and is left alone. Change MaxWins (8-20) in UserData/MelonPreferences.cfg.","c":"Match rules","l":"custom","a":0},{"g":3844970,"n":"Undetectable","v":"1.2.1","s":"Threats can't see you.","d":"The Human, Pitbull, Boar, Seagull, Redcap gnomes, Cat, Rats, Roaches, Mr Statue and the rest walk straight past you. Toggle it live, even mid-chase. Only your gnome is hidden - never other players. Hosting or solo it hides you from everything, and beehives won't launch at you. In a friend's lobby nothing that looks for you can see you; bees near their hive, the Cat's hunt and roach swarms are still decided by the host's game.","c":"Player","l":"partial","a":0},{"g":3844970,"n":"Unlimited Health","v":"1.1.1","s":"Your HP stays topped up at maximum.","d":"Hits still land and knock you about, but your health bar refills straight away. Only your gnome. Works in any lobby: hosting, it refills the moment you are hit; in a friend's lobby your game asks the host for a refill, so it is back to full a moment after each hit.","c":"Player","l":"any","a":0},{"g":3844970,"n":"Unlimited Stamina","v":"1.0.2","s":"Never run out of stamina.","d":"Run, jump and fly as long as you like - the stamina bar never drains. Only your gnome. Works in any lobby, yours or a friend's.","c":"Player","l":"any","a":0},{"g":3844970,"n":"God Mode","v":"1.1.1","s":"Take no damage from any source.","d":"No damage, no lost limbs, no death - from enemies, traps, fire, falls or anything else. The Suicide button, the end-of-day game over and falling out of the world still work, so you can never get stuck. Only your gnome. Works in any lobby: hosting, nothing lands at all; in a friend's lobby your HP and limbs are put back the moment they are hit, and anything that kills you outright is undone on the spot (the host's game still drops what you were carrying).","c":"Player","l":"any","a":0},{"g":3844970,"n":"Free Crafting","v":"1.2.1","s":"Craft anything without needing resources.","d":"Equipment, furniture and potions can be crafted whether or not the stockpile has the resources, and the stockpile is left as it was. Only your crafting. Works in any lobby: hosting, nothing is spent; in a friend's lobby your game adds what the craft costs to the stockpile just before sending it, so the craft uses exactly what was added.","c":"Inventory","l":"any","a":0},{"g":3844970,"n":"Super Speed","v":"1.1.1","s":"Walk and run four times as fast.","d":"Four times your walking and running speed (change SpeedMultiplier to taste). Only your gnome. Works in any lobby, yours or a friend's.","c":"Physics","l":"any","a":0},{"g":3844970,"n":"Super Jump","v":"1.2.1","s":"Jump four times as high.","d":"One tap sends you four times as high (change HeightMultiplier to taste) - no need to hold the button - with normal gravity so it still feels like a jump, and landing back on the same ground doesn't hurt. Only your gnome. Works in any lobby, yours or a friend's.","c":"Physics","l":"any","a":0},{"g":3844970,"n":"Low Gravity","v":"1.0.1","s":"Float: jumps hang in the air and falls drift down slowly.","d":"Gravity drops to a quarter for your gnome (change GravityMultiplier to taste): jumps rise higher and hang in the air, and every fall drifts down slowly and lands softly - ragdoll tumbles included. Only your gnome. Works in any lobby, yours or a friend's.","c":"Physics","l":"any","a":0},{"g":3844970,"n":"No Fall Damage","v":"1.0.3","s":"Falls never hurt you, from any height.","d":"No damage, no lost legs and no tumbling into a ragdoll when you land, however far you fell - and no damage from ragdoll crashes either. Spring shoes still bounce. Only your gnome. Works in any lobby, yours or a friend's.","c":"Physics","l":"any","a":0},{"g":2726490,"n":"Add Money","v":"1.0.1","s":"Add money to your wallet while you play.","d":"Set an amount with − and + (or type it) and press ✓ while you're in a save: that much money goes straight into your wallet and is saved. Hosting or solo it's added at once; in someone else's game the host is asked to add it to the team's money.","c":"Player","l":"any","a":1},{"g":2726490,"n":"Add Kills","v":"1.0.1","s":"Raise your kill count - the more you add, the higher it goes.","d":"Set an amount with − and + (or type it) and press ✓ while you're in a save: your kill count goes up by that much and is saved, and anything unlocked by kills unlocks. Hosting or solo it's added at once; in someone else's game the host is asked for the kills one at a time (up to 10,000 per ✓).","c":"Player","l":"any","a":1},{"g":2726490,"n":"Unlimited Pee","v":"1.0.1","s":"Your bladder stays full - pee as long and as often as you like.","d":"Your bladder is kept at maximum: the stream stays at full strength until you stop it, and there's never any recharging to wait for. Switch it on or off any time, even mid-game. Works in any lobby, yours or a friend's.","c":"Player","l":"any","a":0},{"g":2726490,"n":"Unlimited Stamina","v":"1.0.1","s":"Sprint as long as you like - the stamina bar never drains.","d":"Your stamina is kept full, so you can sprint forever and never have to wait for it to come back. Switch it on or off any time, even mid-game. Works in any lobby, yours or a friend's.","c":"Player","l":"any","a":0},{"g":2726490,"n":"Free Purchasing","v":"1.0.1","s":"Buy anything in the shop, whether or not you can afford it, and spend nothing.","d":"Every shop purchase goes through, however much money you have, and costs nothing - machines, tools and one-time buys alike. Items locked behind kills or nights stay locked. Switch it on or off any time, even mid-game. Only your own purchases are free. Works in any lobby: hosting, nothing is taken; in someone else's game your game first asks the host to add the item's cost to the team's money, so the team's money ends where it started.","c":"Inventory","l":"any","a":0},{"g":2726490,"n":"Unlimited Blocks","v":"1.0.1","s":"Build as much as you like - placing a block never uses one up.","d":"Your block count never goes down when you build, and you can build even with none left. Switch it on or off any time, even mid-game. Blocks are one pool the host keeps for the whole team, so this works when you host or play solo.","c":"Building","l":"host","a":0},{"g":2726490,"n":"Add Blocks","v":"1.0.1","s":"Add as many building blocks as you want while you play.","d":"Set an amount with − and + (or type it) and press ✓ while you're in a save: that many blocks are added and saved, the way the Compactor gives them. Blocks are one pool the host keeps for the whole team, so this works when you host or play solo.","c":"Building","l":"host","a":1},{"g":2551020,"n":"Undetectable","v":"1.2.1","s":"Guards, cameras and civilians never spot you, nobody hears your gunshots, and guard phones and detectors don't give you away.","d":"Guards, security cameras and civilians can look straight at you and never finish spotting you, so nobody is alerted and no alarm goes off because of you. Nobody hears your gunshots, and a guard you shoot doesn't raise the alarm. When you take a guard down, his phone is answered for you, so it never sets off the \"Guard did not check in\" alarm. Lasers, metal detectors and security-tag detectors let you walk through. Switch it on or off any time, even mid-heist (after switching it off, a guard or camera already watching you catches you once it has lost sight of you and sees you again). Only you are hidden - teammates are spotted as normal. The game's security runs in the host's game, so this works when you host or play solo. A small card at the top right of the screen shows when it is switched on or off mid-heist, and when a heist starts with it on. Needs UE4SS installed in the game.","c":"Player","l":"host","a":0},{"g":2551020,"n":"Item Spawner","v":"1.3.1","s":"Press DEL in a heist for a menu of the game's items, with pictures - click one and it appears in front of you.","d":"With it on, press DEL during a heist to open a menu of 85 items by the names the game uses: tools (drills, grinders, lock picks, C4, grenades, keycards, ammo), valuables from every heist with their value (gold, jewellery, wine, chips, bonds, cash, the museum's Mona Lisa and sculptures, the CIA base's documents and disks, the car), bags, crates and trolleys, propane explosives, and people (civilians, guards and every kind of police). Every item shows its picture - the game's own icons for tools, and a photo of the item's actual model for everything else. Items are listed A to Z; search or pick a category, click an item and it is set down on the floor in front of you - a real game item you can pick up, use and bag - and its picture, name and value pop up at the bottom of the screen. The menu is laid out like Reagent Launcher - dark cards that light up under the mouse - and DEL, ESC or its × close it. Spawned items have to be made by the host's game, so this works when you host or play solo. Needs UE4SS installed in the game.","c":"Inventory","l":"host","a":0},{"g":2551020,"n":"Unlimited Health","v":"1.1.1","s":"Nothing hurts you - guards, police, explosions and falls do no damage, so you never go down.","d":"Bullets, explosions and falls do no damage to you, so you never go down, and your health is topped up to full. Switch it on or off any time, even mid-heist; switched off, the game's own damage rules apply again straight away. Only you are protected - teammates take damage as normal. Damage is dealt by the host's game, so this works when you host or play solo. A small card at the top right of the screen shows when it is switched on or off mid-heist, and when a heist starts with it on. Needs UE4SS installed in the game.","c":"Player","l":"host","a":0},{"g":2551020,"n":"Unlimited Ammo","v":"1.1.1","s":"Your magazine never runs dry - keep shooting without reloading.","d":"The gun in your hands is refilled after every shot, so its magazine always reads full and you never have to reload - every rifle, pistol and shotgun. Switch it on or off any time, even mid-heist. Only your guns are affected. Tested when you host or play solo. A small card at the top right of the screen shows when it is switched on or off mid-heist, and when a heist starts with it on. Needs UE4SS installed in the game.","c":"Combat","l":"host","a":0},{"g":319510,"n":"Unlimited Power","v":"1.2.1","s":"The power never runs out - doors, lights and cameras cost nothing.","d":"The power meter stays at a full 100% all night, so you can keep the doors shut, the lights on and the cameras up as long as you like, and the lights never go out at the end. It covers every drain: what the doors, lights and cameras use, the extra drain of the later nights, and Foxy banging on the door - however hard he bangs, the power can't reach zero. Switch it on or off any time, even mid-night; switched off, the power drains as normal again from where it is. A blackout that already happened before it was switched on can't be undone. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Power","l":"","a":0},{"g":319510,"n":"Fast Nights","v":"1.1.1","s":"Nights go by 2.5 times faster.","d":"The clock runs 2.5 times faster: each hour takes 36 seconds instead of 90, so a whole night is over in about 3 and a half minutes instead of 9. Only the clock speeds up - the animatronics move at their usual pace, and a shorter night uses less power. It keeps pace with the game's own clock, so it stays exactly 2.5 times faster even when the game runs slow. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":319510,"n":"Skip Night","v":"1.1.1","s":"Press Apply during a night and it's 6 AM.","d":"Press Apply while a night is being played and the clock strikes 6 AM: the chimes play and the game counts the night as survived - the next night is unlocked and saved, just as if you had made it through. Outside a night it says so instead. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":319510,"n":"Animatronic Locator","v":"1.0.4","s":"The camera map shows where each animatronic is.","d":"While the camera is up, Freddy's, Bonnie's, Chica's and Foxy's faces sit on the camera map where each of them is - on the room's camera button, by the doors when they're coming for you, and Foxy in Pirate Cove or running down the West Hall. It shows the game's own idea of where they are, so it's always right, and several in one room line up side by side - on the top edge of the camera's button, so its number stays readable. The faces are the animatronics' real ones, taken from the game's Custom Night portraits in your copy of the game. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Cameras","l":"","a":0},{"g":319510,"n":"Freeze Animatronics","v":"1.1.1","s":"Freddy, Bonnie, Chica and Foxy stay exactly where they are.","d":"While it's on, nobody moves: Freddy, Bonnie and Chica stay in whatever room they're in, and Foxy stays behind his curtain or wherever he's got to in Pirate Cove - nobody leaves the stage, comes down the halls or reaches the doors. It holds the night's 2, 3 and 4 AM speed-ups too, and switched off, everyone carries on exactly as hard as they would have. Switch it on or off any time, even mid-night. Freezing doesn't send anyone back: someone already in your doorway or your office stays there, but Foxy stops mid-run if he was already running for your door. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":332800,"n":"Unlimited Flashlight","v":"1.0.1","s":"The flashlight's battery never runs down.","d":"The flashlight's battery stays full all night, so you can shine it down the hall and into the vents as long as you like - the meter never drops. Switch it on or off any time, even mid-night. Switched on with the battery already empty, the flashlight works again at once. Balloon Boy in your office still stops it - that's him, not the battery. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Flashlight","l":"","a":0},{"g":332800,"n":"Fast Nights","v":"1.0.1","s":"Nights go by 2.5 times faster.","d":"The clock runs 2.5 times faster: an hour takes 28 seconds instead of 70, a whole night under 3 minutes instead of 7. Only the clock speeds up - the animatronics, the flashlight and the music box keep their usual pace. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":332800,"n":"Skip Night","v":"1.0.1","s":"Press Apply during a night and it's 6 AM.","d":"Press Apply while a night is being played and the clock strikes 6 AM: the game counts the night as survived - the next night is unlocked and saved, just as if you had made it through. Outside a night it says so instead. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":332800,"n":"Auto-Wind Music Box","v":"1.0.1","s":"The music box stays fully wound - the Puppet stays put.","d":"The Prize Corner's music box stays fully wound all night without you ever winding it, so the Puppet stays in his box. Switch it on or off any time, even mid-night. It keeps the box wound; it can't put the Puppet back if the box had already run down and he'd started to leave. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Music Box","l":"","a":0},{"g":332800,"n":"Freeze Music Box","v":"1.0.1","s":"The music box stops running down - winding still tops it up.","d":"The Prize Corner's music box stays exactly as wound as it was: it never runs down, and winding it on CAM 11 still tops it up. Frozen empty, it stays empty - wind it first. (Auto-Wind Music Box keeps it full instead.) Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Music Box","l":"","a":0},{"g":332800,"n":"Animatronic Locator","v":"1.0.1","s":"The camera map shows where every animatronic is.","d":"While the monitor is up, every animatronic's face sits on the camera map where it is - on the camera of its room, in the main hall, or in your office - for the toys, the withered four, Balloon Boy, Mangle, the Puppet and Golden Freddy. It shows the game's own idea of where they are, so it's always right; several in one room line up together. The faces are the animatronics' real ones, taken from your copy of the game. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Cameras","l":"","a":0},{"g":332800,"n":"Freeze Animatronics","v":"1.0.1","s":"Nobody moves - every animatronic stays where it is.","d":"While it's on, nobody moves: the toys, the withered four, Balloon Boy, Mangle, the Puppet and Golden Freddy all stay where they are - nobody leaves their room, comes down the hall or into the vents, and Golden Freddy never shows up. Switched off, everyone carries on exactly as hard as the night would have them. Switch it on or off any time, even mid-night. Freezing doesn't send anyone away: someone already in your office still needs the mask. The music box still runs down, but the frozen Puppet won't leave his box. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":354140,"n":"Instant Audio Lure","v":"1.0.1","s":"No cooldown - the audio lure is ready again at once.","d":"The audio lure is ready again the moment you've used it: play the sound as often as you like, no waiting for the button to come back. Only the wait goes - the audio system can still fail from use, and a lure still only draws Springtrap from a room next to the one it plays in. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Audio","l":"","a":0},{"g":354140,"n":"Instant Reboot","v":"1.0.1","s":"Rebooting a system on the maintenance panel is done at once.","d":"Rebooting the audio, the cameras, the ventilation - or all of them - on the maintenance panel is done the moment you pick it, instead of the progress bar crawling while Springtrap closes in. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Systems","l":"","a":0},{"g":354140,"n":"Disable Springtrap","v":"1.0.1","s":"Springtrap is sent to CAM 10 and stays there all night.","d":"Springtrap is sent to the farthest room, CAM 10, and stays there all night: he never comes down the halls, never gets in the vents and never reaches your office - wherever he was when you switched it on, even at your window. An audio lure can't pull him out. The phantoms are left as they are. Switched off, he carries on from CAM 10 as usual. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":354140,"n":"Fast Nights","v":"1.0.1","s":"Nights go by 2.5 times faster.","d":"The clock runs 2.5 times faster: an hour takes 24 seconds instead of 60 (16 instead of 40 on the first night), a whole night about two and a half minutes. Only the clock speeds up - Springtrap, the phantoms and the systems keep their usual pace. While it's on, the game's own Fast Nights extra is paused (this sets the pace instead) and is back before 6 AM. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":354140,"n":"Skip Night","v":"1.0.1","s":"Press Apply during a night and it's 6 AM.","d":"Press Apply while a night is being played and the clock strikes 6 AM: the game counts the night as survived - the next night is unlocked and saved, just as if you had made it through. Outside a night it says so instead. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":354140,"n":"Animatronic Locator","v":"1.0.1","s":"The camera map shows where Springtrap is.","d":"While the monitor is up, Springtrap's face sits on the camera map where he is - on the camera of his room, in the vents, or by your office when he's coming for you - so you always know where to play the audio. It shows the game's own idea of where he is, so it's always right. The face is his real one, taken from your copy of the game. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Cameras","l":"","a":0},{"g":354140,"n":"Freeze Animatronics","v":"1.0.1","s":"Springtrap stays where he is and the phantoms keep away.","d":"While it's on, Springtrap stays exactly where he is - he takes no steps, an audio lure doesn't pull him, and the ventilation blackout doesn't push him closer - and the phantoms keep away: no new ones appear and none of them jumps at you. Switched off, everything carries on as the night would have it. Freezing doesn't send him away: if he's already by your office he stays there (see Disable Springtrap). Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":388090,"n":"Fast Nights","v":"1.0.1","s":"Nights go by 2.5 times faster.","d":"The clock runs 2.5 times faster: an hour takes 24 seconds instead of 60, a whole night about two and a half minutes. Only the clock speeds up - the animatronics and the Freddles keep their usual pace. Switch it on or off any time, even mid-night. (For Five Nights at Freddy's 4 itself - not the Halloween Edition.) Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":388090,"n":"Skip Night","v":"1.0.1","s":"Press Apply during a night and it's 6 AM.","d":"Press Apply while a night is being played and the clock strikes 6 AM: the game counts the night as survived - the next night is unlocked and saved, just as if you had made it through. Outside a night it says so instead. (For Five Nights at Freddy's 4 itself - not the Halloween Edition.) Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":388090,"n":"Animatronic Locator","v":"1.0.1","s":"A live map of the house in the top-left corner, with every animatronic on it.","d":"A map of the house sits in the top-left corner of the screen - the living room, the kitchen, both halls, your doors, the closet and the bed - with every animatronic's face in the room it's in, live: Bonnie, Chica, Foxy and Fredbear (Nightmare on his nights), and Freddy on the bed once the Freddles are there, with how many. It shows the game's own idea of where they are, so it's always right. The faces are the animatronics' real ones, taken from your copy of the game. Switch it on or off any time, even mid-night. (For Five Nights at Freddy's 4 itself - not the Halloween Edition.) Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Map","l":"","a":0},{"g":388090,"n":"Freeze Animatronics","v":"1.0.1","s":"Nobody moves - and the Freddles stop piling up.","d":"While it's on, nobody moves: Bonnie, Chica, Foxy and Fredbear stay in the room they're in, nobody counts down to coming in at your doors or out of the closet, and the Freddles stop piling up on the bed. Switched off, everyone carries on from where they are, as hard as the night would have them. Switch it on or off any time, even mid-night. Freezing doesn't send anyone away: someone already in your room still needs you to act. (For Five Nights at Freddy's 4 itself - not the Halloween Edition.) Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":506610,"n":"Skip Night","v":"1.0.1","s":"Press Apply during a night and it's over.","d":"Press Apply while a night is being played and it's over: the game goes on to its end-of-night screen, counts the night as survived and saves the next one, just as if you had made it through. On Night 5 it takes you to the Scooping Room, and from there on to the ending. In the Private Room (Custom Night and the real ending) the clock strikes 6 AM instead. Outside a night it says so. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":506610,"n":"Unlimited Oxygen","v":"1.0.1","s":"In Custom Night your oxygen never runs out.","d":"In Custom Night your oxygen stays full: the Minireenas on you and the Endo in the vents can't drain it, so you never pass out. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":506610,"n":"Auto-Wind Springlocks","v":"1.0.1","s":"On Night 4 the springlocks stay wound - the suit never snaps.","d":"On Night 4, in the springlock suit, every springlock stays fully wound: you never have to wind them and they never come loose, so the suit can't snap shut on you. The Minireenas climbing the suit are left as they are - shake them off. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":506610,"n":"Animatronic Locator","v":"1.0.2","s":"Shows where the animatronic hunting you is, on the nights you can't see it.","d":"On the nights you can't see what's coming, it shows you: in Ballora Gallery a panel top left with Ballora's face where her music is coming from and a bar for how close she is - red as she gets near, and the panel outlined in red while she's coming at you (stop crawling); in the Funtime Auditorium the same for Funtime Foxy; and in the Private Room, with the monitor up, the face of whoever is roaming the halls on the monitor's map: Ennard in the real ending, Ballora in Custom Night. The faces are their real ones, taken from your copy of the game. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Cameras","l":"","a":0},{"g":506610,"n":"Unlimited Power","v":"1.0.1","s":"In Custom Night the power never runs out.","d":"In the Private Room - Custom Night, and the real ending - the power stays at 100%: the doors, the vent, the monitor and the light cost nothing, and Funtime Foxy and Electrobab can't knock it down. Switched on with the power already out, it comes back. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Power","l":"","a":0},{"g":506610,"n":"God Mode","v":"1.0.1","s":"Get caught and you don't die - the room starts again.","d":"The jumpscare still gets you, but you don't die: instead of the death screen and the retry, the room you were in starts again on the spot - Ballora Gallery, the Breaker Room, the Funtime Auditorium, Parts and Service, Under Desk, Night 4. In the Private Room (the real ending and Custom Night) the night carries on from where you were, with the clock and the power as they were (10% if the power going out got you). Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":506610,"n":"Freeze Animatronics","v":"1.0.1","s":"Nobody moves or gets any closer, in every room.","d":"While it's on, nobody moves or gets any closer: Ballora stays where she is in her gallery, Funtime Freddy doesn't get any angrier in the Breaker Room, Funtime Foxy keeps his distance in the Auditorium, Bon-Bon's hunt never runs out, the Bidybabs can't pull the sheet open, the springlocks don't come undone and the Minireenas stop climbing on Night 4, and in the Private Room Ennard - and in Custom Night everyone, from Ballora and Bon-Bon to Bonnet, Yenndo, the Bidybabs, the Minireenas and Electrobab - stops where they are. Everything you do still works. Switched off, everyone carries on from where they are. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":319510,"n":"God Mode","v":"1.0.2","s":"Get jumpscared and you don't die - the night goes on.","d":"The jumpscare still gets you, but you don't die: the night starts again there and then, at the time it was, with the power you had (10% if it ran out) and the animatronics as active as they were - everyone back on the show stage and in Pirate Cove. The power-out Freddy and Golden Freddy (who would close the game) are shown too, then the night goes on. The phone call doesn't play again. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":332800,"n":"God Mode","v":"1.0.2","s":"Get jumpscared and you don't die - the night goes on.","d":"The jumpscare still gets you, but you don't die: the night starts again there and then, at the time it was, with the flashlight's battery, the music box and every animatronic's level as they were - everyone back where they start the night. Shadow Bonnie can't close the game either. The phone call doesn't play again. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":354140,"n":"God Mode","v":"1.0.2","s":"Springtrap gets you and you don't die - the night goes on.","d":"Springtrap's jumpscare still gets you, but you don't die: the night starts again there and then, at the time it was and as hard as it was, with Springtrap back where he starts and every system working. The phone call doesn't play again. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":388090,"n":"God Mode","v":"1.0.2","s":"Get jumpscared and you don't die - the night goes on.","d":"The jumpscare still gets you, but you don't die: the night starts again there and then, at the hour it was and as hard as it was - everyone back in the living room and the Freddles off the bed. Nightmare's jumpscare too, on nights 7 and 8. Switch it on or off any time, even mid-night. (For Five Nights at Freddy's 4 itself - not the Halloween Edition.) Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":738060,"n":"Add Money","v":"1.0.1","s":"Add as much money as you like.","d":"Set an amount and press Apply: that much is added to your money there and then, and saved - in the middle of a day, a night or from the menus (it's waiting for you the next time money is used). Up to $99,999,999 in all. Starting a new game resets your money to $100, as always. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Money","l":"","a":1},{"g":738060,"n":"Unlimited Money","v":"1.0.1","s":"$99,999,999 that never runs out.","d":"While it's on you have $99,999,999 and it never goes down: buy anything, settle every lawsuit, and you can't go bankrupt. What you spend still counts towards unlocking the catalog's next pages. Switched off, you keep what's left. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":738060,"n":"Free Purchasing","v":"1.1.1","s":"Everything you buy is free.","d":"Everything you buy costs nothing, and you can buy what you couldn't afford: catalog items, room and attraction upgrades in the blueprint, and the office upgrades on the computer at night. The money goes straight back the moment you pay, and the screen and your save always show your real balance. Items still count as bought, and what you spend still unlocks the catalog's next pages. Lawsuits aren't purchases - Unlimited Money covers those. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":738060,"n":"Certificate of Completion","v":"1.0.1","s":"Adds the Certificate of Completion to the title screen.","d":"Press Apply and the Certificate of Completion is on your title screen, as if you had reached the Completion ending. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Lorekeeper Certificate","v":"1.0.1","s":"Adds the Lorekeeper Certificate to the title screen.","d":"Press Apply and the Lorekeeper Certificate is on your title screen, as if you had found every secret (Fruity Maze, Midnight Motorist and Security Puppet) and reached the Completion ending - the credits play their Lorekeeper version too. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Certificate of Insanity","v":"1.0.1","s":"Adds the Certificate of Insanity to the title screen.","d":"Press Apply and the Certificate of Insanity is on your title screen, as if you had reached the Insanity ending. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Certificate of Mediocrity","v":"1.0.1","s":"Adds the Certificate of Mediocrity to the title screen.","d":"Press Apply and the Certificate of Mediocrity is on your title screen, as if you had reached the Mediocre ending. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Certificate of Being Blacklisted","v":"1.0.1","s":"Adds the Certificate of Being Blacklisted to the title screen.","d":"Press Apply and the Certificate of Being Blacklisted is on your title screen, as if you had reached the Blacklisted ending. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Certificate of Bankruptcy","v":"1.0.1","s":"Adds the Certificate of Bankruptcy to the title screen.","d":"Press Apply and the Certificate of Bankruptcy is on your title screen, as if you had gone bankrupt - without losing your save. Press Apply with the game running: it goes into the game's own certificates file, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Trash and the Gang Certificate","v":"1.0.1","s":"Adds the Trash and the Gang badge to the title screen.","d":"Press Apply and the Trash and the Gang badge is on your title screen, as if you'd had Bucket Bob, Mr. Can-Do, Mr. Hugs, No. 1 Crate and Pan Stan on stage together. Press Apply with the game running: it goes into your save, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. It counts as earned, so the game won't pay its $1,000 bonus for it if you put them on stage later. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Mediocre Melodies Certificate","v":"1.0.1","s":"Adds the Mediocre Melodies badge to the title screen.","d":"Press Apply and the Mediocre Melodies badge is on your title screen, as if you'd had Happy Frog, Mr. Hippo, Pigpatch, Nedd Bear and Orville Elephant on stage together. Press Apply with the game running: it goes into your save, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. It counts as earned, so the game won't pay its $10,000 bonus for it if you put them on stage later. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Rockstars Assemble Certificate","v":"1.0.1","s":"Adds the Rockstars Assemble badge to the title screen.","d":"Press Apply and the Rockstars Assemble badge is on your title screen, as if you'd had the four Rockstars and Lefty on stage together. Press Apply with the game running: it goes into your save, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. It counts as earned, so the game won't pay its $20,000 bonus for it if you put them on stage later. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Posh Pizzeria Certificate","v":"1.0.1","s":"Adds the Posh Pizzeria badge to the title screen.","d":"Press Apply and the Posh Pizzeria badge is on your title screen, as if you'd had El Chip, Funtime Chica and Music Man on stage together. Press Apply with the game running: it goes into your save, so it stays - on the title screen it appears straight away, anywhere else you'll see it the next time you're on the title screen. Like earning it, it also unlocks Pickles in the catalog. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Certificates","l":"","a":1},{"g":738060,"n":"Skip Night","v":"1.0.1","s":"Press Apply during the night shift and you log off.","d":"Press Apply during the night shift and it's over: you log off as if every task were done, and the game carries on as after any night - closing time, the salvage, the night's takings, all saved. Nobody can sneak in while the night fades out. Not while the blueprint is up (logging off then is the Insanity ending), and from anywhere else it says so. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":738060,"n":"Instant Task Completion","v":"1.0.1","s":"Every task is done the moment you start it.","d":"During the night shift, every task you start on the computer is done the moment you click it - supplies ordered, flyers printed, maintenance finished - so you're never waiting at the desk while the animatronics crawl closer. The game finishes each one its own way, so the warnings clear and Log Off appears as usual. Equipment upgrades are purchases and are left alone. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Tasks","l":"","a":0},{"g":738060,"n":"Silent Tasks","v":"1.1.1","s":"Tasks make no noise.","d":"While a task is running, it makes no noise: neither the computer it needs nor the printer counts towards the noise level the animatronics listen for, so they won't come in on account of your work. The fan and ads still count - Silent Fan and Silent Ads take those away, and all three work together. With no task running everything counts as usual. The sounds themselves still play. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Tasks","l":"","a":0},{"g":738060,"n":"Silent Fan","v":"1.0.1","s":"The fan makes no noise.","d":"The office fan makes no noise the animatronics can hear: keep it running all night to stay cool, and it adds nothing to the noise level they listen for at the vent openings. The fan still cools the office and you still hear it. Works with Silent Tasks and Silent Ads. With the fan silent and the computer off, the office is as quiet as the game allows - quiet enough that shining your light on a vent opening sends whoever is in it back. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":738060,"n":"Silent Ads","v":"1.0.1","s":"Ads make no noise.","d":"The ads that pop up on the computer make no noise the animatronics can hear: let one play out without drawing anyone in from the vent openings. The ad still plays and you still hear it. Works with Silent Tasks and Silent Fan. Switch it on or off at any time - switched off in the middle of an ad, its noise comes back. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":738060,"n":"Freeze Animatronics","v":"1.0.1","s":"Nobody moves - at night or in a salvage.","d":"While it's on, nobody moves: during the night shift Molten Freddy, Scraptrap, Scrap Baby and Lefty stay in whatever vent they're in and nobody comes into the office, and in a salvage the animatronic in front of you gets no closer to attacking (the taser still knocks it back). Staying quiet and looking still pushes them back from a vent opening. Switched off, everyone carries on from where they are. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":738060,"n":"God Mode","v":"1.0.1","s":"Get jumpscared and you don't die.","d":"The jumpscare still gets you, but you don't die. In the night shift the night starts again there and then, with the tasks you'd finished still done and the office as hot as it was - instead of losing the whole day. Overheating is simply cancelled and the office cooled. In a salvage, the attack is shrugged off like a taser black-out and the salvage carries on - you keep the money. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":738060,"n":"Animatronic Locator","v":"1.0.1","s":"A live vent map with everyone's face, and the salvage's danger.","d":"During the night shift, a map of the vents sits in the top-left corner with the face of everyone in the building on the vent they're in, live - the openings either side of you turn red when someone's in them. While the computer's own motion detector or audio map is up, the faces are on it instead. In a salvage, a panel shows the animatronic's face and how close it is to attacking (which the game never shows), with the point past which lowering the checklist sets it off. The faces are their real ones, taken from your copy of the game. Switch it on or off at any time. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Map","l":"","a":0},{"g":871720,"n":"Skip Night","v":"1.0.1","s":"Press Apply during a night and it's 6 AM.","d":"Press Apply while a night is being played and it's 6 AM: the game's own win plays and the night counts as won - your score, high score, challenge and 50/20 best time are saved, and you get the usual chance of a power-up, just as if you had made it through. Outside a night, or with something already getting you, it says so instead. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":1},{"g":871720,"n":"Fast Nights","v":"1.0.1","s":"Nights go by 2.5 times faster.","d":"The clock runs 2.5 times faster: an hour takes 18 seconds instead of 45, a whole night under 2 minutes instead of 4 and a half. Only the clock speeds up - the animatronics, the power and the temperature keep their usual pace, and every hour still happens (the Prize Counter's threats, the after-night power-up odds). Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Night","l":"","a":0},{"g":871720,"n":"Unlimited Power","v":"1.0.1","s":"The power never runs out.","d":"The power stays at 100% all night, whatever you have on - doors, vents, the fan, the heater, the A/C, the flashlight and the monitor all cost nothing, and Scrap Baby's shocks can't knock it down. It can't bring the office back once the power has already gone out, so switch it on before that. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Power","l":"","a":0},{"g":871720,"n":"Always 60°","v":"1.0.1","s":"The office stays at 60° all night.","d":"The temperature is locked at 60°: the heater, a fan left off and the Frigid power-up don't move it, so nothing that reacts to heat ever starts - Freddy doesn't speed up, Jack-O-Chica never comes, Lefty and Phantom Freddy stay calm and the ventilation drains at its normal rate. The fan, heater and A/C still make their noise and do their other jobs. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Temperature","l":"","a":0},{"g":871720,"n":"Unlimited Faz-Coins","v":"1.0.1","s":"99 Faz-Coins all night.","d":"You always have 99 Faz-Coins during a night: pay Rockstar Freddy whenever he asks and buy everything at the Prize Counter - the three plushies and the Death Coin. Each Prize Counter item can still be bought once a night, as in the game. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":871720,"n":"God Mode","v":"1.0.1","s":"Nothing can kill you.","d":"Nothing can kill you: whoever comes for you, the night goes on. The ones that would wreck the office are sent back the moment before they strike, the way the game itself calls them off (the music box wound, the eyes cleared, the duct crawlers back to their start), and every other kill is called off in the instant it happens - before any of it plays - with that animatronic reset as the game resets it. The 6 AM win, quitting with Esc and the easter eggs are left alone. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":871720,"n":"Disable Dee Dee & XOR","v":"1.0.1","s":"Dee Dee and XOR never show up.","d":"Neither Dee Dee nor XOR shows up, so no one is added to your night halfway through - you face exactly the line-up you set. It works like the DD Repel power-up, without using one up, and keeps XOR away too. Switched on while Dee Dee is already talking, she leaves before she picks anyone. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":871720,"n":"Freeze Animatronics","v":"1.0.1","s":"Nobody gets any closer.","d":"While it's on, nobody gets any closer: no one moves on the cameras, in the halls or in the ducts, no one comes into the office, and every countdown to a scare stops where it is - the doors, the mask and the flashlight still send them back. The five in the vents still crawl about the vent map, but can't come through the opening. Switched off, everyone carries on from where they were, at the levels you set, and your score is unchanged. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Animatronics","l":"","a":0},{"g":871720,"n":"Animatronic Locator","v":"1.0.1","s":"See who's coming for you and how close they are.","d":"A panel in the top-left corner lists the animatronics on their way, the closest first - each with their real face, where they are (which camera, hall, vent, duct or door) and a bar that fills as they get nearer, red when they're about to strike. It covers everyone you put in the night: Freddy down the left hall, Foxy leaving Pirate's Cove, Ballora in the halls, the vent and duct crawlers, the Prize Counter's threat, the Nightmares at the doors, Lefty, Funtime Foxy's show and the rest. Switch it on or off any time, even mid-night. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Cameras","l":"","a":0},{"g":268910,"n":"Unlimited Super Meter","v":"1.0.2","s":"The Super Meter is always full.","d":"All five cards stay full: use EX moves and Super Arts as often as you like - the meter fills straight back after each one. Works for both players in co-op and in the plane levels too. Switch it on or off any time, even mid-fight - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":268910,"n":"Unlimited Coins","v":"1.0.2","s":"Always 60 coins to spend.","d":"You always have 60 coins - the most the game's coin counter can show. Spend them at Porkrind's Emporium and they're straight back. Both players' coins in co-op. Switch it on or off any time - a card in the game's corner shows it took. Switched off, you keep what you have. Needs BepInEx, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":268910,"n":"Free Purchasing","v":"1.0.2","s":"Everything at Porkrind's Emporium is free.","d":"Buy any weapon, charm or Super Art at Porkrind's Emporium without spending a coin - even ones you couldn't afford. Your coins stay as they were, and anything you already own still can't be bought twice. Switch it on or off any time - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":268910,"n":"One-Shot Kill","v":"1.0.2","s":"Every hit is a knockout.","d":"Any hit you land is a knockout: bosses go down to your first shot, and every enemy in the run 'n gun levels dies in one. It covers your bullets, EX moves, Super Arts and the plane's weapons. Nothing that hurts you changes. Switch it on or off any time, even mid-fight - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":268910,"n":"God Mode","v":"1.0.2","s":"Nothing can hurt you - your HP is always full.","d":"Bullets, bosses, enemies and spikes pass straight through you: you never lose a heart and never flinch, and a pit still bounces you back out, unhurt. Hearts you'd already lost are refilled. Works for both players in co-op and in the plane levels too. A hit it saves you from still counts as a hit, so it never earns you the Perfect Run achievement by itself. Switch it on or off any time, even mid-fight - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":268910,"n":"Always A+/S","v":"1.0.2","s":"Every level you win gets the top grade - A+, or S on Expert.","d":"Win a boss fight or a run 'n gun level and the results screen gives you the best grade there is: A+ on Simple and Regular, S on Expert, with the game's own \"Golly!\" banner - saved to your slot like a grade you earned, and it counts toward the game's grade achievements. A better grade you earn yourself (P, for a pacifist run) is kept, and your time, hits, parries and Super Meter are shown as they really were. Switch it on any time before the fight ends - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Grades","l":"","a":0},{"g":268910,"n":"Boss Health Bar","v":"1.0.0","s":"A health bar for the boss you're fighting, with its death-screen mugshot - it drains with every hit.","d":"A framed health bar with the boss's mugshot - the one from the death screen - in the top-right corner of every boss fight. It drains exactly as you deal damage, and when one boss goes down and the next comes on - the Root Pack's potato, then the onion, then the carrot - or a boss changes into its next form, the mugshot switches to the new one and the bar fills up again. Small pips under the bar show how many bosses or forms the fight has and which one you're on. Works in plane levels and with two players; run 'n gun levels have no boss and no bar. Switch it on or off any time, even mid-fight - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Vision","l":"","a":0},{"g":268910,"n":"Damage Multiplier","v":"1.0.0","s":"Your shots do more damage - from half to 50 times as much.","d":"Set how much damage your shots do with the stepper: anything from 0.5x (a harder fight) to 50x. It covers your bullets, EX moves, Super Arts and the plane's weapons, takes effect the moment you change the number, even mid-fight, and works for both players in co-op. The Super Meter you earn stays as it was, and nothing that hurts you changes. At 1x it's off. Needs BepInEx, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":268910,"n":"Hitbox Viewer","v":"1.0.0","s":"See every hitbox - yours, the bosses', their bullets and the parryable ones.","d":"Every hitbox is outlined in colour over the fight: yours in green (the box that matters when you duck and dash), bosses and enemies in red, enemy bullets in orange, anything you can parry in pink, and your own shots in yellow - with a small key in the corner. The shapes are the game's own, turning and stretching as the attacks do, so you can learn exactly what hits you. Switch it on or off any time, even mid-fight - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Vision","l":"","a":0},{"g":268910,"n":"Auto-Collect Coins","v":"1.0.0","s":"Every coin in a run 'n gun level is picked up for you the moment the run starts.","d":"In a run 'n gun level, every coin is picked up for you as soon as the run begins - the hidden ones too, one after another with the usual ding - so you never have to hunt for one or go back for one you ran past. They count exactly like coins you touched: when you finish the level they're added to your coins and the results screen counts them. As in the game, dying or quitting loses them, and a retry collects them again. Coins you already have aren't counted twice, and the map's coins are left for you to find. Switch it on or off any time - a card in the game's corner shows it took, and another counts the coins. Needs BepInEx, which Reagent Launcher installs for you.","c":"Money","l":"","a":0},{"g":268910,"n":"End Fight","v":"1.0.0","s":"Press Apply during a fight or a run 'n gun level and you've won it.","d":"Press Apply while a boss fight or a run 'n gun level is being played and it's over - you win, just as if you'd done it yourself. A boss gets the KNOCKOUT! and its death; a run 'n gun gets the BRAVO! and the coins you picked up, and you're walked off to the finish without a pit costing you a heart. Then comes the results screen, and the level is marked beaten with its grade and time and saved. It works in plane levels, King Dice's casino and the DLC too. The grade is the game's own, from how you played up to then - pair it with Always A+/S for the top grade. A win counts like a real one, Steam achievements included. On the map, in a tutorial or Elder Kettle's house, before a fight starts or once it's over, it says so instead. Needs BepInEx, which Reagent Launcher installs for you.","c":"Combat","l":"","a":1},{"g":391540,"n":"Unlimited Health","v":"1.0.2","s":"Your HP never goes down.","d":"Hits still land - the flash, the sound, the shake - but your HP goes straight back to full, so nothing can get you to a game over. Against Sans, KR (the purple poison on your HP bar) is cleared too. Works in every battle and anywhere else you can get hurt. Switch it on or off at any time, even mid-battle. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":391540,"n":"Add EXP","v":"1.0.2","s":"Add EXP and level up on the spot.","d":"Set an amount and press Apply while you're playing: that much EXP is added and your LV goes up with it, just as after a battle - more max HP, AT and DF, and the \"Your LOVE increased\" sound. Up to LV 20 (99,999 EXP). It's kept in your file the next time you SAVE. LV is LOVE: some characters notice, Sans judges you by it, and an ending checks you're still LV 1. It doesn't count as killing anyone. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Player","l":"","a":1},{"g":391540,"n":"Max Attack","v":"1.0.1","s":"AT 99 - every hit lands far harder.","d":"Your AT goes to 99 in the stat menu - more than the game ever gives you (LV 20 is 89) - so every hit does far more damage. Switched off, you get your own AT back. Switch it on or off at any time, even mid-battle. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":391540,"n":"Max Defense","v":"1.0.1","s":"DF 99 - most hits take just 1 HP.","d":"Your DF goes to 99 in the stat menu - more than the game ever gives you (LV 20 is 89): every hit does over 20 less damage, so most only take 1 HP (the game never takes less). Switched off, you get your own DF back. Switch it on or off at any time, even mid-battle. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":391540,"n":"One-Shot Kill","v":"1.0.1","s":"Any hit you land is a knockout.","d":"In a battle, every FIGHT hit that lands takes all the monster's HP - the number shows what it had left and its HP bar empties. A miss is still a miss, and fights the game scripts (Sans dodging, the final battles) play out as always. Beating a monster this way is killing it, with its EXP and gold, and it changes your route like any kill - Spare as usual when you don't want to. Switch it on or off at any time, even mid-battle. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Combat","l":"","a":0},{"g":391540,"n":"Add Gold","v":"1.0.2","s":"Add as much gold as you like.","d":"Set an amount and press Apply while you're playing: that much gold is added there and then, with the shop's \"sold\" sound - in the overworld, in a shop, even mid-battle. Up to 99,999G in all. It's kept in your file the next time you SAVE. Needs Reagent Loader, which Reagent Launcher installs for you.","c":"Money","l":"","a":1},{"g":2709570,"n":"Unlimited Money","v":"1.0.1","s":"$9,999,999 that never runs out.","d":"While it's on the store's money stays at $9,999,999: order, build and upgrade as much as you like. Your sales still count - switched off, you get back the money you really had plus everything you earned in the meantime, and a save made while it's on stores your real money, never the $9,999,999. Switch it on or off at any time, even mid-day. It's the host's money, so this works when you host or play solo.","c":"Money","l":"host","a":0},{"g":2709570,"n":"Add Money","v":"1.0.1","s":"Add money to the store while you play.","d":"Set an amount with − and + (or type it) and press ✓ while you're in a store: that much goes straight into the store's money. Hosting or solo it's added at once; in someone else's store the host's game is asked to add it, the way the game does when you sell furniture back.","c":"Money","l":"any","a":1},{"g":2709570,"n":"Free Purchasing","v":"1.0.1","s":"Everything you buy is free.","d":"Product orders, shelves and furniture, decorations, paint and hedges, store space, departments, upgrades and demolition all cost nothing - even with no money at all - and your money stays exactly where it was. Loan repayments are still taken as usual. Switch it on or off at any time. It's the host's game that takes the money, so this works when you host or play solo.","c":"Money","l":"host","a":0},{"g":2709570,"n":"Item Spawner","v":"1.0.1","s":"Press DEL for a menu of every product - click one for a full box.","d":"With it on, press DEL in your store for a menu of all the game's products (339), each with its picture, brand and how many fit in a box, grouped the way the game groups them (Basic Products, Dairy, Frozen Foods, Hygiene...). Search or pick a group, choose 1, 5 or 10 boxes, and click a product: full boxes of it land in front of you, ready to stock. Products from tiers you haven't unlocked are marked - customers buy them once the tier is unlocked. The menu is laid out like Reagent Launcher, and DEL, ESC or its × close it. Boxes are made the way the game makes them when a player puts one down, so this works in any store, yours or a friend's.","c":"Inventory","l":"any","a":0},{"g":2709570,"n":"Unlimited Franchise Points","v":"1.0.1","s":"999 franchise points that never run out.","d":"While it's on you have 999 franchise points and unlocking costs nothing: every product line and every perk. Points you earn still count - switched off, you get back the points you really had plus any earned meanwhile, and a save made while it's on stores your real points, never the 999. Switch it on or off at any time. Franchise points are kept by the host's game, so this works when you host or play solo.","c":"Franchise","l":"host","a":0},{"g":2709570,"n":"Add Franchise Points","v":"1.0.1","s":"Add franchise points while you play.","d":"Set an amount and press ✓ while you're in your store: that many franchise points are added at once, up to 1,000 in all - spend them on product lines and perks. Franchise points are kept by the host's game, so this works when you host or play solo.","c":"Franchise","l":"host","a":1},{"g":2709570,"n":"Disable Thieves","v":"1.0.1","s":"Nobody steals from your store.","d":"Customers the game picks to steal - and the ones who'd steal because no checkout is free - shop and pay like everyone else instead (they wait for a checkout). A thief already running for the door when you switch it on is left for your security. Switch it on or off at any time. Customers are run by the host's game, so this works when you host or play solo.","c":"Customers","l":"host","a":0},{"g":4704690,"n":"Chromium","v":"1.0.1","s":"40-50% more FPS with the same look - the game's two most expensive settings that barely show are made cheaper.","d":"Measured on an RTX 5060 with Epic settings: 81 -> 120 FPS at 1440p, 121 -> 173 FPS at 1080p. Almost all of the game's graphics cost is Lumen's global illumination and reflections at Epic; Chromium holds those two at High (the bounce light and reflections are worked out at a lower resolution, then smoothed - side by side it looks the same). Settings already at High or below are kept, and everything else is left alone: ray tracing, fog, motion blur, shadows and post-processing each made under 3% difference. It also fixes the game's \"unlimited\" frame-rate setting, which really stops at 62 FPS - with Chromium on, unlimited means unlimited; any limit you pick in the game stays. Your saved settings are never changed: switch it off and your own levels come back. It only changes your own game, so it works on any server, hosting or not.","c":"Performance","l":"any","a":0},{"g":4704690,"n":"X-Ray","v":"1.2.4","s":"Every hider shows in red through walls and floors - like the end-of-round reveal, all round long. Only you can see it.","d":"While it's on, every hider still in the round is shown on your screen as a solid red figure of their body - drawn over walls and floors at any distance, however well they've painted themselves - the way the game shows everyone at the end of a round, but all the time. The figure moves, crouches and poses with them (on every body type), and the game's own red reveal flashes over their exact outline twice a second. It's only on your copy of the game: the hiders and everyone else see nothing different. Hunters, decoys and caught hiders stay as the game shows them, so a red figure is always a real hider. Switch it on or off at any time, even mid-round - switched off, everyone looks exactly as the game wants again. Works on any server, hosting or not, as a hunter or a hider.","c":"Vision","l":"any","a":0},{"g":4704690,"n":"End Round","v":"1.2.2","s":"End the round right now - time's up, the hiders win.","d":"Press Apply during a round and it ends at once, exactly as if the timer had run out: the hiders still hidden win and Answer Check shows everyone's hiding spot as usual - in Chicken mode too. Pressed during the hiding time, the hunters are let out and the round ends straight after. Press it again during Answer Check to skip the results and go back to the lobby. A card in the game confirms it. On your own server it just works. On a friend's server it works when the host has Reagent Launcher too: your game asks theirs in the chat and their game ends the round for you (the chat shows everyone who did it). If the host's game doesn't, pressing it during Answer Check casts your Ready vote instead.","c":"Match rules","l":"partial","a":1},{"g":4704690,"n":"Invisible to Hunters","v":"1.2.2","s":"While you hide, nobody else can see you - your body and name tag vanish from every other screen. Works on any server.","d":"While it's on and you're a hider in a round, nobody else can see your body or your name tag - hunters and other players alike - from the hiding time to the end of the search; you still see yourself, free camera included. You're visible again at Answer Check, in the lobby, or when you switch it off - a card in the game always says which (\"You'll vanish when the round starts\" in the lobby, \"Only while you're a hider\" as a hunter). Switch it on or off at any time, even mid-round. It works on any server: on a friend's server - even one whose host doesn't have Reagent Launcher - your body is drawn far below the floor for everyone else while your own screen shows it where you are; your collision stays where you stand, so a hunter who shoots exactly at your spot can still catch you. When you host, or the host has Reagent Launcher too, the game's own invisible body is used instead (the one caught hiders get), so shots pass through you too.","c":"Player","l":"any","a":0},{"g":4704690,"n":"Disable Wall-Clip Reveal","v":"1.0.3","s":"Hide inside walls and objects as long as you like - the game never shows you for it.","d":"The game shows a hider to everyone when they stay inside a wall or object for about five seconds. With this on it never happens to you: the gauge stays empty and nobody is told - and if you were already shown when you switch it on, that's lifted. A card tells you when it's keeping you hidden. Only you are affected. Switch it on or off at any time, even mid-round. Your own game decides this, so it works on any server, hosting or not.","c":"Player","l":"any","a":0},{"g":4704690,"n":"Disable Forced Taunt","v":"1.0.2","s":"Your forced taunts go silent - the game's timed taunt no longer gives you away. Nobody else's change.","d":"During the search the game makes every hider still hidden taunt every so often (the forced taunt - the sound that gives away where you are). With this on, yours are silenced and nobody else's: every game running Reagent Launcher stops your forced taunt the moment it starts. It works on any server - your game says so in the chat when you join or switch it (and again when someone joins), and every player running Reagent Launcher hears it, no host needed. Players without Reagent Launcher still hear your forced taunts. Taunting with your taunt key still works. Switch it on or off at any time, even mid-round.","c":"Player","l":"any","a":0},{"g":4704690,"n":"Never Hunter","v":"1.1.2","s":"You're never drawn as the hunter - you always get to hide.","d":"When a round starts and the draw picks you as a hunter, someone else - another player, at random - hunts in your place, and a card tells you. Nobody else's chances change. (In Increasing Tag, being caught still makes you a hunter - that's the mode's rule.) The draw happens in the host's game, so on your own server it just works. On a friend's server it works when the host has Reagent Launcher too: your game asks theirs in the chat when you join or switch it, their game keeps you out of the draw, and a card tells you the answer. A guest's game can't change the draw by itself - the host's game alone picks the hunters - so on a server whose host doesn't have Reagent Launcher this does nothing.","c":"Player","l":"partial","a":0},{"g":4704690,"n":"Pick the Hunter","v":"1.2.0","s":"Press F6 and click who hunts next round.","d":"With it on, press F6 on a server for a list of the players; click names to pick them - picked players get an amber HUNTER badge, and a line at the top says what your picks will do (\"1 picked - they hunt next round\", or how many more the game draws at random). Clear picks starts over; Done, F6 or Esc closes it, and the list updates when someone joins or leaves. When the next round starts, the picked players are the hunters - the game's own draw, with the picks as the only applicants. Pick more than the server's hunter count and the game draws among them; fewer, and it tops up at random as usual. Picks stay for every round until they're changed. On your own server it just works. On a friend's server it works when the host has Reagent Launcher too: your game asks theirs in the chat when you close the list, their game uses your picks (whoever picked last wins), and a card tells you the answer. A guest's game can't change the draw by itself - the host's game alone picks the hunters - so on a server whose host doesn't have Reagent Launcher this does nothing.","c":"Match rules","l":"partial","a":0},{"g":4704690,"n":"Skip Hiding Timer","v":"1.1.2","s":"End the hiding time - the hunters are let out now.","d":"Press Apply during the hiding time and the hunters are let out at once, as if the countdown had run out (in Chicken mode, each hunt's wait). A card in the game confirms it. On your own server it just works. On a friend's server it works when the host has Reagent Launcher too: your game asks theirs in the chat and their game skips it for you (the chat shows everyone who did it). If the host's game doesn't, it casts your Ready vote while you're a hider - the hiding time ends once every hider is ready.","c":"Match rules","l":"partial","a":1},{"g":397950,"n":"Add Style Points","v":"1.0.0","s":"Add style points while you play.","d":"Set an amount with − and + (or type it) and press ✓ while the game is running: that many style points are added - saved, and kept on Steam, just like points you earn in levels. Spend them on abilities in the Abilities menu. A card in the game's corner shows how many you have. Needs BepInEx, which Reagent Launcher installs for you.","c":"Style Points","l":"","a":1},{"g":397950,"n":"Unlimited Style Points","v":"1.0.0","s":"Style points hold at 999,999 - buying abilities takes nothing off.","d":"Your style points stay at 999,999, so you can afford any ability and buying one takes nothing off. Your real balance is kept safe: points you earn in levels still add to it, it's what the game saves (and keeps on Steam), and it comes straight back when you switch this off. Switch it on or off any time, even mid-level - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Style Points","l":"","a":0},{"g":397950,"n":"Free Unlocks","v":"1.0.0","s":"Unlock any ability for free.","d":"Every ability in the Abilities menu costs nothing - even ones you couldn't afford - and its price reads FREE. Your style points stay as they are. What you unlock stays unlocked after you switch this off (the game saves it, on Steam too), and unlocking them all earns the game's all-abilities achievement. Switch it on or off any time, even mid-level - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Style Points","l":"","a":0},{"g":397950,"n":"God Mode","v":"1.0.0","s":"Nothing ends your run - not even falling off the map.","d":"Touching the ground, lava, lasers and everything else deadly is ignored, and if you fall off the map you're caught and put back on a truck. A level it saves you in isn't uploaded to the Steam leaderboards and doesn't count as an ace, so the leaderboards stay fair - finishing it still counts. Switch it on or off any time, even mid-level - a card in the game's corner shows it took. Needs BepInEx, which Reagent Launcher installs for you.","c":"Player","l":"","a":0},{"g":2835570,"n":"One-Hit Kills","v":"1.0.0","s":"A live shell you fire at someone takes all their charges.","d":"Every live shell you fire at someone else takes all of their charges at once - the dealer's in single-player and Double or Nothing, and other players' in multiplayer. Works in single-player and multiplayer. A Double or Nothing run it changed isn't uploaded to the leaderboard. Switch it on or off any time - a card in the game's corner shows it took. The game's own files are never changed.","c":"Combat","l":"","a":0},{"g":2835570,"n":"Unlimited Health","v":"1.0.0","s":"Shots at you never take a charge.","d":"Live shells never take a charge from you - the dealer's, your own, or other players' - and expired medicine never kills you. Works in single-player and multiplayer. A Double or Nothing run it changed isn't uploaded to the leaderboard. Switch it on or off any time - a card in the game's corner shows it took. The game's own files are never changed.","c":"Player","l":"","a":0},{"g":3241660,"n":"Unlimited Energy","v":"1.0.1","s":"Your energy bar stays full - sprint, slide and climb as much as you like.","d":"Your energy never runs down: sprint, slide and tumble-climb for as long as you like. Energy is your own game's, so this works in any lobby, yours or a friend's, even when nobody else has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3241660,"n":"God Mode","v":"1.0.1","s":"Nothing hurts you and nothing kills you.","d":"Enemies, traps, explosions, falls, thrown valuables and death pits can't hurt you, and your health is kept full - fall into a pit and the game puts you back at the truck. Your own game takes the hits in R.E.P.O., so this works in any lobby, even when the host doesn't have Reagent Launcher. You can still self-destruct, and knockback still throws you about. It sits out the arena after a failed level, which only ends when players fall. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3241660,"n":"Super Strength","v":"1.0.1","s":"Lift anything like it weighs nothing, hold enemies down and throw much harder.","d":"Heavy valuables, statues and anything else you grab handle like light objects, a hold on an enemy is a firm one, and your throws go much further. Light things feel the same. The host's game runs R.E.P.O.'s physics, so this works when you host or play solo, and as a guest when the host has Reagent Launcher too. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"host","a":0},{"g":3241660,"n":"Undetectable","v":"1.0.1","s":"Enemies don't see you, hear you or go after you.","d":"Enemies don't see you or hear your footsteps, your voice or the things you carry and throw, and any already after you give up. Other players are treated as usual. Traps and explosions can still hurt you - pair it with God Mode. It works fully when you host or play solo, and as a guest when the host has Reagent Launcher; in a lobby whose host doesn't have it, enemies only ignore you looking at them. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"partial","a":0},{"g":3241660,"n":"Add Money","v":"1.0.1","s":"Add money to the team while you play.","d":"Set an amount in thousands - the way the shop counts, so 50 is $50K - and press ✓ during a run: it goes straight into the team's money, and the shop and the truck show it at once. Works when you host or play solo, and as a guest when the host has Reagent Launcher (the host's game keeps the money). Up to $999,999K.","c":"Money","l":"host","a":1},{"g":3241660,"n":"Free Purchases","v":"1.0.1","s":"Everything in the shop costs $0K.","d":"Items, upgrades, health packs, crystals and upgrade rerolls cost nothing: the price tags read $0K, the checkout takes a cart even with no money, and your money stays as it is. What you buy is yours as usual. With it on as the shop opens, every item can turn up in stock. Works when you host or play solo, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Money","l":"host","a":0},{"g":3241660,"n":"Indestructible Valuables","v":"1.0.0","s":"Valuables never lose value - drop them, throw them, bump them.","d":"Drop a valuable, throw it, knock it into a wall or an enemy: it keeps every dollar, and explosions don't destroy it. It still cracks and clatters like before - only the \"-$\" never comes. It covers every valuable in the level, the whole team's haul. Works when you host or play solo, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Money","l":"host","a":0},{"g":3241660,"n":"Item Spawner","v":"1.0.1","s":"Press DEL for a menu of every item and valuable, with pictures - click one to spawn it.","d":"With it on, press DEL during a run for a menu of every item the shop sells - weapons, drones, orbs, upgrades, carts, health packs - and every valuable the levels hide, each with its picture, grouped the way the game groups them. Items show their shop price and valuables what they're worth. Search, pick 1, 3 or 5 and click: it lands in front of you. A spawned item is yours like one you bought, so it comes back in the truck next level; in the shop it joins the stock (buy it at the counter - free with Free Purchases). Valuables count towards the haul when you extract them. The menu is laid out like Reagent Launcher, and DEL, ESC or × close it. Works when you host or play solo, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Inventory","l":"host","a":0},{"g":3527290,"n":"Unlimited Stamina","v":"1.0.2","s":"Your stamina never runs out - sprint, climb and jump as long as you like.","d":"Your stamina bar stays full: sprint, climb walls, ropes and vines, jump and hang on as long as you like, and climbing never slows down from being tired. Injuries, hunger and the cold still take their part of the bar, and you can still pass out from them. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Super Speed","v":"1.0.2","s":"Walk, run and swim three times as fast.","d":"You walk, run and swim three times as fast - sprinting costs no more stamina than usual. Add Movement Speed Multiplier on top for even more. Others see you zoom past. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Movement Speed Multiplier","v":"1.0.2","s":"Walk, run and swim faster or slower - set how many times your speed.","d":"Set how fast you move, from half your speed to fifty times it, with - and + - it changes while you play, no need to press anything else. At 1× it's off. Works with Super Speed: the two multiply. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Super Jump","v":"1.0.2","s":"Jump three times as high.","d":"Every jump goes three times as high - balloons, low gravity and the double jump still add on top. A long way down still hurts unless No Fall Damage is on, and No Falling Ragdoll keeps you on your feet. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Jump Height Multiplier","v":"1.0.2","s":"Jump higher or lower - set how many times your jump height.","d":"Set how high you jump, from half your jump to fifty times as high (about 40 metres), with - and + - it changes while you play. At 1× it's off. Works with Super Jump: the two multiply. Big jumps land hard - No Fall Damage and No Falling Ragdoll take care of that. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Climbing Speed Multiplier","v":"1.0.2","s":"Climb walls, ropes and vines faster or slower - set how many times your speed.","d":"Set how fast you climb walls, ropes and vines, from half speed to fifty times as fast, with - and + - it changes while you play. Sliding down stays the game's own speed. Climbing faster also costs less stamina per metre. At 1× it's off. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher.","c":"Player","l":"any","a":0},{"g":3527290,"n":"No Falling Ragdoll","v":"1.0.2","s":"Hard landings don't knock you over - you land on your feet and keep going.","d":"Fall from a height or slide hard down a wall and you land on your feet instead of going limp. The fall still hurts unless No Fall Damage is on - only the knock-down is gone. Being kicked, thrown, blown up or tripped still knocks you over, and so do your own emotes and the beach wake-up. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time.","c":"Player","l":"any","a":0},{"g":3527290,"n":"No Fall Damage","v":"1.0.1","s":"Falling never hurts you - land from any height without a scratch.","d":"Land from any height, or slide hard down a wall, and your health bar takes nothing. Everything else that hurts - cold, poison, enemies, explosions, thorns - still does. Pair it with No Falling Ragdoll to land on your feet too, and with the jump mods for huge leaps. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3527290,"n":"Disable Fog","v":"1.0.2","s":"The rising fog can't hurt you and you can see through it - when you host, it never rises.","d":"The fog that swallows each part of the island can't chill you, and it's gone from your screen. When you host or play solo it doesn't rise at all - for everyone - and if it was already on its way it goes back to where it began. As a guest it still rises for the others, it just can't touch you; that works even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Game","l":"partial","a":0},{"g":3527290,"n":"Item Spawner","v":"1.0.2","s":"Press DEL for a menu of every item in the game, with pictures - click one and it's yours.","d":"With it on, press DEL in the airport or on the island for a menu of every item in the game - food, healing, rope, pitons, bags, mystical items, guidebook pages, tools, and the extras the game never hands out, like the airport's chess pieces - each with the picture the inventory shows, grouped under headings and searchable. Pick 1, 3, 5 or 10, and whether it goes in your hands or at your feet, then click. Bags land at your feet - walk into one to wear it. Works in any game - solo, hosting, or as a guest, even when the host doesn't have Reagent Launcher. The menu is laid out like Reagent Launcher, and DEL, ESC or × close it.","c":"Inventory","l":"any","a":0},{"g":2881650,"n":"God Mode","v":"1.0.0","s":"Nothing hurts you and nothing kills you - monsters, traps, pits, curses, oxygen.","d":"Monsters, traps, explosions, curses, pits and running out of oxygen can't hurt or kill you - your health stays full. Fall out of the world and you're put back at the diving bell. Oxygen still runs down (it's the dive's clock), knockback still happens, and being left behind when the bell goes up still counts - that's how the day ends. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":2881650,"n":"Undetectable","v":"1.0.0","s":"Monsters don't see you, hear you, chase you or attack you.","d":"Monsters walk right past you: they don't see you, don't hear your voice or footsteps, don't chase you and don't attack - one already after you loses interest. When you host or play alone it covers every monster, including the ones that grab, possess or drag you away; as a guest it does too when the host has Reagent Launcher. On a host without it the monsters still see you, but can't touch you. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"partial","a":0},{"g":2881650,"n":"Unlimited Stamina","v":"1.0.0","s":"Sprint as long as you like - your stamina never runs out.","d":"Your stamina stays full and you're never out of breath, so you can sprint for as long as you like. Oxygen underground is separate and still runs down. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":2881650,"n":"Add Money","v":"1.0.0","s":"Add money to the team while you play.","d":"Pick an amount and press the tick while you play: it's added to the team's money straight away, with the game's own money pop-up, and saved with the run. Works when you host or play alone, and as a guest when the host has Reagent Launcher.","c":"Money","l":"host","a":1},{"g":2881650,"n":"Unlimited Money","v":"1.0.1","s":"The team's money never runs out - buy anything, nothing takes money away.","d":"The team's money shows $999,999 and nothing takes money away - not the shop, not the hospital bill. The real money is kept on the side (what you earn meanwhile still counts), so switching off puts it back, and the run is saved with the real money. Works when you host or play alone, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Money","l":"host","a":0},{"g":2881650,"n":"Free Purchases","v":"1.0.0","s":"Everything in the shop costs $0.","d":"Every item in the shop shows 0$, the cart adds up to $0, and ordering takes nothing from the team's money - the drone still delivers. Switching off brings the real prices back. Works when you host or play alone, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Money","l":"host","a":0},{"g":2881650,"n":"Add Views","v":"1.0.0","s":"Add views towards this week's quota while you play.","d":"Pick a number of views and press the tick while you play: they're added towards this week's quota, as if a video had brought them in, and saved with the run. Works when you host or play alone, and as a guest when the host has Reagent Launcher.","c":"Views","l":"host","a":1},{"g":2881650,"n":"Unlimited Views","v":"1.0.0","s":"The team always has enough views - the quota is always met.","d":"This week's quota always reads as met, so a quota day never ends the run - and every upload still adds its views on top. Switching off takes back exactly what it added, and the run is saved with the real views. Works when you host or play alone, and as a guest when the host has Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Views","l":"host","a":0},{"g":2881650,"n":"Add MetaCoins","v":"1.0.0","s":"Add MetaCoins - the hat shop's money - while the game runs.","d":"Pick an amount and press the tick: it's added to your MetaCoins straight away, with the game's own pop-up, and saved with your hats - they're yours to spend in the hat shop and on island upgrades. Works on the main menu too. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher.","c":"MetaCoins","l":"any","a":1},{"g":2881650,"n":"Unlimited MetaCoins","v":"1.0.0","s":"Your MetaCoins never run out - every hat and island upgrade is free.","d":"Your MetaCoins show 999,999 while you play and nothing takes them away, so every hat in the hat shop and every island upgrade is yours for free - and stays yours. Your real MetaCoins are kept on the side (what you earn meanwhile still counts) and are what's saved, so switching off gives them back. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"MetaCoins","l":"any","a":0},{"g":2881650,"n":"Unlimited Camera Usage","v":"1.0.0","s":"The camera's film never runs out - record as long as you like.","d":"Your camera keeps showing about 100% film: record for as long as you like, and the footage keeps its proper timing. Very long recordings take longer to extract at the end of the day. Switching off gives the camera its usual 90 seconds back, minus what it recorded. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Cameras","l":"any","a":0},{"g":2881650,"n":"Unlimited Flashlight Battery","v":"1.0.0","s":"Your flashlights and other battery items never run flat.","d":"Every flashlight, the shock stick, the radios and anything else you carry that runs on a battery stays fully charged - the defibrillator and the rescue hook never run out of uses. Others keep seeing your light. Flares still burn out. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Flashlight","l":"any","a":0},{"g":2881650,"n":"Item Spawner","v":"1.0.1","s":"Press DEL for a menu of every item, with pictures - click one and it's yours.","d":"With it on, press DEL in the house or underground for a menu of every item in the game - lights, medical, gadgets, cameras, camera upgrades, emote books, hats, artifacts and discs - each with its picture and shop price, grouped under headings and searchable. Pick 1, 3, 5 or 10, and whether it goes in your inventory (or in front of you when it's full) or where you're looking, then click. Warnings say which items unlock a hat for good, are cursed or explode. Works in any game - alone, hosting, or as a guest, even when the host doesn't have Reagent Launcher. The menu is laid out like Reagent Launcher, and DEL, ESC or × close it.","c":"Inventory","l":"any","a":0},{"g":3799100,"n":"Unlimited Health","v":"1.0.0","s":"You never lose a heart - deadly pills can't kill you.","d":"Deadly pills, a broken shield, the eye spider and the other players' tools can't take your hearts - they stay full, so you can't die. Health pills still work. If you've already lost hearts, switching it on fills them back up. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3799100,"n":"Unlimited Shield","v":"1.0.0","s":"Your shield never goes down - it can't break.","d":"Your shield (the game's resistance) stays full: ordinary pills, the pliers and rerolls take nothing from it, so it never breaks and never costs you a heart. A vaccine still turns a loss into a gain. Deadly pills go straight for your hearts - Unlimited Health covers those. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0},{"g":3799100,"n":"Pill X-Ray","v":"1.0.1","s":"Every pill glows green if it's safe and red if it's deadly.","d":"Every pill on the table gets a glowing ring: green for a safe pill, red for a deadly one that takes a heart - with a red arrow over it, so you spot it even in a heap of pills. Health pills get a small +. It follows the pills as they move and changes if the centrifuge swaps one. Only you see it, and it hides while the pause menu is open. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Vision","l":"any","a":0},{"g":3799100,"n":"Item Spawner","v":"1.0.0","s":"Press DEL in a match for a menu of every item - click one and it's yours.","d":"With it on, press DEL during a match for a menu of every item in the match - Hammer, Drug Test, Mouth Clamp, Centrifuge, the vaccines, Mint, Pliers, Extractor, Lobotomy, Shock Therapy, Amplifier and more - with the game's own names and descriptions. Click one and it goes into your first empty inventory slot, ready to use on your turn. Items the match's trial modifications leave out are greyed. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. DEL, ESC or × close the menu.","c":"Inventory","l":"any","a":0},{"g":3799100,"n":"Unlimited Item Uses","v":"1.0.0","s":"Your items are never used up - use them again and again.","d":"Use an item and it's straight back in the same slot, ready to use again - the hammer, the drug test, the vaccines, the centrifuge, the mint, every one. Items you swap away or copy go as usual. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Inventory","l":"any","a":0},{"g":3799100,"n":"Unlimited Rerolls","v":"1.0.0","s":"Reroll the item tray as often as you like - free, whatever your shield.","d":"Reroll the item tray as many times as you like: it costs no shield, and it works even with less than the 2 shield the game normally asks for. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Inventory","l":"any","a":0},{"g":3799100,"n":"No Pill Timer","v":"1.0.0","s":"The turn timer never runs out - take as long as you like.","d":"In matches with the Timer trial modification, the countdown for choosing your pill, your items or a target never starts, so the game never picks for you - take as long as you like. Switched on mid-countdown, it stops it. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Game","l":"any","a":0},{"g":3799100,"n":"Always Safe","v":"1.0.0","s":"Every pill you choose turns out safe.","d":"Choose the deadly pill and it turns out safe: on your turn, a deadly pill you pick is made safe before you swallow it, and the danger moves to another pill on the table (the same colour when there is one), so the table keeps its number of deadly pills. A pill another player forces on you with a Mouth Clamp isn't covered - Unlimited Health covers that. Works in any match - alone against the AI, hosting, or as a guest, even when the host doesn't have Reagent Launcher. Switch it on or off any time - a card in the game's corner shows it took.","c":"Player","l":"any","a":0}],"featured":4704690}</script>
+<script>
+(() => {
+  "use strict";
+
+  // the hero's switch, with the launcher's own toast
+  const demo = document.getElementById("demo-switch");
+  const toast = document.getElementById("toast");
+  const toastText = document.getElementById("toast-text");
+  let toastTimer = 0;
+  demo.addEventListener("click", () => {
+    const on = demo.getAttribute("aria-pressed") !== "true";
+    demo.setAttribute("aria-pressed", String(on));
+    toastText.textContent = "Invisible to Hunters is " + (on ? "on" : "off");
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+  });
+
+  // the mod library
+  const data = JSON.parse(document.getElementById("mods-data").textContent);
+  const LOBBY = {
+    any: ["any", "Any lobby", "Works in your game and in a friend's, even when they don't have Reagent."],
+    partial: ["partial", "Best as host", "Does everything when you host, and part of it in a friend's lobby."],
+    host: ["host", "Host or solo", "Works when you host or play on your own."],
+    local: ["", "Local play", "Works in local play only."],
+    custom: ["", "Local and custom lobbies", "Works in local play and private or custom lobbies."],
+  };
+  const games = data.games;
+  const byId = new Map(games.map((g) => [g.id, g]));
+  const gameList = document.getElementById("games");
+  const main = document.getElementById("lib-main");
+  const search = document.getElementById("mod-search");
+  const clear = document.getElementById("search-clear");
+  const state = { game: data.featured, category: "", query: "" };
+
+  const el = (tag, cls, text) => {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  };
+  const svg = (paths) => {
+    const ns = "http://www.w3.org/2000/svg";
+    const s = document.createElementNS(ns, "svg");
+    s.setAttribute("class", "icon");
+    s.setAttribute("viewBox", "0 0 24 24");
+    s.setAttribute("aria-hidden", "true");
+    const p = document.createElementNS(ns, "path");
+    p.setAttribute("d", paths);
+    s.appendChild(p);
+    return s;
+  };
+  const plural = (n, word) => n + " " + word + (n === 1 ? "" : "s");
+
+  for (const g of games) {
+    const b = el("button", "game");
+    b.type = "button";
+    b.dataset.id = g.id;
+    b.append(el("span", "name", g.name), el("span", "count", String(g.count)));
+    b.addEventListener("click", () => {
+      state.game = g.id;
+      state.category = "";
+      if (state.query) { search.value = ""; state.query = ""; clear.hidden = true; }
+      render();
+    });
+    gameList.appendChild(b);
+  }
+
+  function modRow(m, showGame) {
+    const row = el("article", "mod");
+    const text = el("div");
+    if (showGame) text.appendChild(el("span", "from", byId.get(m.g).name));
+    text.append(el("h4", null, m.n), el("p", null, m.s));
+    if (m.d && m.d !== m.s) {
+      const more = el("button", "more", "More about it");
+      more.type = "button";
+      more.setAttribute("aria-expanded", "false");
+      const long = el("p", "long", m.d);
+      long.hidden = true;
+      more.addEventListener("click", () => {
+        long.hidden = !long.hidden;
+        more.setAttribute("aria-expanded", String(!long.hidden));
+        more.textContent = long.hidden ? "More about it" : "Less";
+      });
+      text.append(more, long);
+    }
+    const tags = el("div", "mod-tags");
+    const lobby = LOBBY[m.l];
+    if (lobby) {
+      const b = el("span", "badge " + lobby[0], lobby[1]);
+      b.title = lobby[2];
+      tags.appendChild(b);
+    }
+    if (m.a) {
+      const b = el("span", "badge play", "Use while playing");
+      b.title = "Set an amount or press Apply while the game runs.";
+      tags.appendChild(b);
+    }
+    tags.appendChild(el("span", "mono", "v" + m.v));
+    row.append(text, tags);
+    return row;
+  }
+
+  function group(label, mods, showGame) {
+    const box = el("div", "group");
+    const head = el("div", "group-label");
+    head.append(el("span", "label", label), el("span", "mono", String(mods.length)));
+    box.appendChild(head);
+    for (const m of mods) box.appendChild(modRow(m, showGame));
+    return box;
+  }
+
+  function renderGame() {
+    const g = byId.get(state.game);
+    const mods = data.mods.filter((m) => m.g === g.id);
+    const cats = [...new Set(mods.map((m) => m.c))];
+    if (state.category && !cats.includes(state.category)) state.category = "";
+
+    const head = el("div", "lib-head");
+    const left = el("div");
+    const loaders = g.loaders.length ? " · runs on " + g.loaders.join(" and ") + ", set up for you" : "";
+    left.append(el("span", "label", "Steam"), el("h3", null, g.name), el("p", "sub", plural(mods.length, "mod") + loaders));
+    const store = el("a", "store", "Store page");
+    store.href = "https://store.steampowered.com/app/" + g.id + "/";
+    store.rel = "noopener";
+    store.target = "_blank";
+    store.appendChild(svg("M8 16L16 8M9 8h7v7"));
+    head.append(left, store);
+    main.appendChild(head);
+
+    if (cats.length > 1) {
+      const chips = el("div", "chips");
+      chips.setAttribute("role", "group");
+      chips.setAttribute("aria-label", "Sections");
+      for (const c of ["", ...cats]) {
+        const chip = el("button", "chip", c || "All");
+        chip.type = "button";
+        chip.setAttribute("aria-pressed", String(state.category === c));
+        chip.addEventListener("click", () => { state.category = c; render(); });
+        chips.appendChild(chip);
+      }
+      main.appendChild(chips);
+    }
+    for (const c of cats) {
+      if (state.category && state.category !== c) continue;
+      main.appendChild(group(c, mods.filter((m) => m.c === c), false));
+    }
+  }
+
+  function renderSearch() {
+    const words = state.query.toLowerCase().split(/\s+/).filter(Boolean);
+    const hits = data.mods.filter((m) => {
+      const hay = (m.n + " " + m.s + " " + m.d + " " + m.c + " " + byId.get(m.g).name).toLowerCase();
+      return words.every((w) => hay.includes(w));
+    });
+    const head = el("div", "lib-head");
+    const left = el("div");
+    left.append(el("span", "label", "Search"), el("h3", null, plural(hits.length, "mod")), el("p", "sub", "matching “" + state.query.trim() + "”"));
+    head.appendChild(left);
+    main.appendChild(head);
+    if (!hits.length) {
+      main.appendChild(el("p", "empty", "Nothing matches that. Try a game's name, or words like money, speed or hunter."));
+      return;
+    }
+    for (const g of games) {
+      const mine = hits.filter((m) => m.g === g.id);
+      if (mine.length) main.appendChild(group(g.name, mine, false));
+    }
+  }
+
+  function render() {
+    main.replaceChildren();
+    const searching = state.query.trim() !== "";
+    for (const b of gameList.children) {
+      b.setAttribute("aria-pressed", String(!searching && Number(b.dataset.id) === state.game));
+    }
+    if (searching) renderSearch(); else renderGame();
+  }
+
+  search.addEventListener("input", () => {
+    state.query = search.value;
+    clear.hidden = search.value === "";
+    render();
+  });
+  clear.addEventListener("click", () => {
+    search.value = "";
+    state.query = "";
+    clear.hidden = true;
+    render();
+    search.focus();
+  });
+
+  // the "Supported games" list opens that game in the library
+  for (const link of document.querySelectorAll(".game-list a")) {
+    link.addEventListener("click", () => {
+      const button = gameList.querySelector('[data-id="' + link.dataset.game + '"]');
+      if (button) button.click();
+    });
+  }
+
+  render();
+  const picked = gameList.querySelector('[aria-pressed="true"]');
+  if (picked) gameList.scrollLeft += picked.getBoundingClientRect().left - gameList.getBoundingClientRect().left - 16;
+})();
+</script>
 </body>
 </html>
